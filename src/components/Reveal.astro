@@ -1,0 +1,28 @@
+---
+/**
+ * Scroll-reveal wrapper. Adds the `.reveal` class and a stagger delay; the
+ * IntersectionObserver in BaseLayout flips it to `.is-visible` once.
+ *
+ * Zero runtime cost beyond that shared observer — no animation library.
+ * Falls back to fully visible with JS disabled and under
+ * `prefers-reduced-motion: reduce` (both handled in global.css).
+ */
+interface Props {
+  /** Stagger index. Each step adds 60ms, matching the design system's cadence. */
+  index?: number;
+  class?: string;
+  as?: 'div' | 'li' | 'article' | 'section';
+}
+
+const {
+  index = 0,
+  class: className = '',
+  as: Tag = 'div',
+}: Props = Astro.props;
+// Cap the delay so late items in a long grid never feel laggy.
+const delay = Math.min(index * 60, 360);
+---
+
+<Tag class={`reveal ${className}`} style={`--reveal-delay:${delay}ms`}>
+  <slot />
+</Tag>

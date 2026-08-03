@@ -1,0 +1,47 @@
+---
+/**
+ * Inline SVG icon.
+ *
+ * Inlined rather than imported from a package so there is no icon-font
+ * request, no JS, and no flash of missing glyphs. Decorative by default
+ * (aria-hidden); pass a `label` to expose one to assistive tech.
+ *
+ * Never use emoji as icons — see design-system/urjapod-energy/MASTER.md.
+ */
+import { icons, type IconName } from './icons';
+
+interface Props {
+  name: IconName;
+  class?: string;
+  label?: string;
+  strokeWidth?: number;
+  /** Any other attribute (id, data-*) is forwarded to the <svg>. */
+  [key: string]: unknown;
+}
+
+const {
+  name,
+  class: className = '',
+  label,
+  strokeWidth = 2,
+  ...rest
+} = Astro.props;
+
+const a11y = label
+  ? ({ role: 'img', 'aria-label': label } as const)
+  : ({ 'aria-hidden': 'true', focusable: 'false' } as const);
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={className}
+  {...a11y}
+  {...rest}
+  set:html={icons[name]}
+/>

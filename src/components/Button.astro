@@ -1,0 +1,68 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  href?: string;
+  type?: 'button' | 'submit';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'onDark';
+  size?: 'sm' | 'md' | 'lg';
+  /** Trailing arrow. `right` for navigation, `upRight` for outbound. */
+  icon?: 'right' | 'upRight' | 'none';
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  type = 'button',
+  variant = 'primary',
+  size = 'md',
+  icon = 'none',
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const base =
+  'group inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg font-semibold transition-all duration-200 ease-[var(--ease-out-soft)] disabled:cursor-not-allowed disabled:opacity-50';
+
+const variants = {
+  primary:
+    'bg-accent-600 text-white shadow-soft-sm hover:bg-accent-700 hover:shadow-soft-md active:bg-accent-800',
+  secondary:
+    'border border-ink-300 bg-white text-ink-900 shadow-soft-sm hover:border-ink-400 hover:bg-ink-50 hover:shadow-soft-md',
+  ghost: 'text-accent-600 hover:bg-accent-50 hover:text-accent-700',
+  onDark:
+    'border border-white/25 bg-white/10 text-white backdrop-blur-sm hover:border-white/40 hover:bg-white/20',
+} as const;
+
+// md is 44px tall — the minimum comfortable touch target.
+const sizes = {
+  sm: 'h-10 px-4 text-sm',
+  md: 'h-11 px-5 text-[0.9375rem]',
+  lg: 'h-13 px-7 text-base',
+} as const;
+
+const cls = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
+const Tag = href ? 'a' : 'button';
+const tagProps = href ? { href } : { type };
+---
+
+<Tag class={cls} {...tagProps} {...rest}>
+  <slot />
+  {
+    icon === 'right' && (
+      <Icon
+        name="arrowRight"
+        class="size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5"
+      />
+    )
+  }
+  {
+    icon === 'upRight' && (
+      <Icon
+        name="arrowUpRight"
+        class="size-4 shrink-0 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+      />
+    )
+  }
+</Tag>

@@ -1,0 +1,152 @@
+---
+/**
+ * Pod Gen 1 — front elevation, drawn as vector.
+ *
+ * Deliberately an SVG rather than a photo or render: it is ~3 KB, scales
+ * perfectly on every display, needs no image CDN, and cannot cause layout
+ * shift. Swap for real product photography when it exists — keep the
+ * wrapping aspect-ratio box so CLS stays at zero when you do.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+// Corrugated panel ribs across the container face.
+const ribs = Array.from({ length: 26 }, (_, i) => 44 + i * 15.2);
+// Four access doors along the front.
+const doors = [58, 158, 258, 358];
+---
+
+<div class={`relative ${className}`}>
+  <svg
+    viewBox="0 0 460 300"
+    class="w-full"
+    role="img"
+    aria-label="Pod Gen 1: a 20-foot containerised battery energy storage system, front elevation"
+  >
+    <defs>
+      <linearGradient id="pod-body" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1e293b"></stop>
+        <stop offset="100%" stop-color="#0f172a"></stop>
+      </linearGradient>
+      <linearGradient id="pod-door" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#334155"></stop>
+        <stop offset="100%" stop-color="#1e293b"></stop>
+      </linearGradient>
+      <linearGradient id="pod-glow" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0"></stop>
+        <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.9"></stop>
+        <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0"></stop>
+      </linearGradient>
+    </defs>
+
+    <!-- HVAC / thermal management units on the roof -->
+    {
+      [92, 200, 308].map((x) => (
+        <g>
+          <rect
+            x={x}
+            y="30"
+            width="62"
+            height="20"
+            rx="3"
+            fill="#1e293b"
+            stroke="#334155"
+            stroke-width="1.5"
+          />
+          <line
+            x1={x + 10}
+            y1="40"
+            x2={x + 52}
+            y2="40"
+            stroke="#475569"
+            stroke-width="1.5"
+          />
+        </g>
+      ))
+    }
+
+    <!-- Container body -->
+    <rect
+      x="30"
+      y="50"
+      width="400"
+      height="190"
+      rx="6"
+      fill="url(#pod-body)"
+      stroke="#334155"
+      stroke-width="2"></rect>
+
+    <!-- Corrugation -->
+    <g stroke="#1e293b" stroke-width="1.5" opacity="0.9">
+      {ribs.map((x) => <line x1={x} y1="58" x2={x} y2="232" />)}
+    </g>
+
+    <!-- Top rail -->
+    <rect x="30" y="50" width="400" height="12" rx="3" fill="#334155" opacity="0.6"
+    ></rect>
+
+    <!-- Access doors with cell-rack detail -->
+    {
+      doors.map((x) => (
+        <g>
+          <rect
+            x={x}
+            y="82"
+            width="82"
+            height="120"
+            rx="4"
+            fill="url(#pod-door)"
+            stroke="#475569"
+            stroke-width="1.5"
+          />
+          {[0, 1, 2, 3].map((r) => (
+            <rect
+              x={x + 11}
+              y={95 + r * 27}
+              width="60"
+              height="16"
+              rx="2"
+              fill="#0f172a"
+              stroke="#38bdf8"
+              stroke-width="0.9"
+              opacity={0.28 + r * 0.06}
+            />
+          ))}
+          <circle cx={x + 71} cy="196" r="2.5" fill="#38bdf8" opacity="0.7" />
+        </g>
+      ))
+    }
+
+    <!-- Base plinth -->
+    <rect x="22" y="240" width="416" height="16" rx="4" fill="#1e293b"></rect>
+    <rect x="52" y="256" width="46" height="12" rx="3" fill="#0f172a"></rect>
+    <rect x="362" y="256" width="46" height="12" rx="3" fill="#0f172a"></rect>
+
+    <!-- Energised base line -->
+    <rect x="60" y="236" width="340" height="2.5" rx="1.25" fill="url(#pod-glow)"
+    ></rect>
+
+    <!-- Corner castings -->
+    {
+      [
+        [30, 50],
+        [416, 50],
+        [30, 226],
+        [416, 226],
+      ].map(([x, y]) => (
+        <rect
+          x={x}
+          y={y}
+          width="14"
+          height="14"
+          rx="2"
+          fill="#475569"
+          opacity="0.8"
+        />
+      ))
+    }
+  </svg>
+</div>

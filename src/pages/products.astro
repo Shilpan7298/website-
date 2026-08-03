@@ -1,0 +1,179 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import FeatureCard from '../components/FeatureCard.astro';
+import CTASection from '../components/CTASection.astro';
+import PodVisual from '../components/PodVisual.astro';
+import Reveal from '../components/Reveal.astro';
+import Icon from '../components/Icon.astro';
+import { podGen1, showProvisionalMarkers } from '../data/site';
+
+const subsystems = [
+  {
+    icon: 'battery',
+    title: 'Battery racks',
+    body: 'Prismatic LFP cells assembled into modules and racks, with cell-level fusing and busbar protection throughout.',
+  },
+  {
+    icon: 'cpu',
+    title: 'Battery management system',
+    body: 'AI-enabled BMS monitoring voltage, current and temperature per cell, with predictive balancing and early fault detection.',
+  },
+  {
+    icon: 'thermometer',
+    title: 'Thermal management',
+    body: 'Active cooling holds the pack inside its optimal temperature band, which is what protects cycle life in Indian summer conditions.',
+  },
+  {
+    icon: 'shield',
+    title: 'Fire detection and suppression',
+    body: 'Multi-layer protection: gas and smoke detection, aerosol suppression, and physical separation between modules.',
+  },
+  {
+    icon: 'zap',
+    title: 'Power conversion interface',
+    body: 'DC coupling to your choice of PCS, sized to the charge and discharge rates the application requires.',
+  },
+  {
+    icon: 'grid',
+    title: 'Controls and telemetry',
+    body: 'Plant controller integration and SCADA telemetry, so the system responds to dispatch signals and reports against them.',
+  },
+] as const;
+
+const provisional = podGen1.specs.filter((s) => !s.verified).length;
+---
+
+<BaseLayout
+  title="Pod Gen 1 — Containerised Battery Energy Storage"
+  description="Pod Gen 1 is Urjapod's 20-foot containerised battery energy storage system, built on prismatic LFP cells with an AI-enabled battery management system for grid-scale deployment."
+>
+  <PageHeader
+    eyebrow="Products"
+    title="Pod Gen 1"
+    lead={podGen1.summary}
+  />
+
+  <!-- Visual + headline specs -->
+  <Section width="wide">
+    <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
+      <Reveal class="rounded-hero border border-ink-200 bg-white p-8 shadow-soft-lg">
+        <PodVisual />
+        <p class="mt-6 text-center text-sm text-ink-600">
+          Pod Gen 1 — 20 ft ISO container, front elevation
+        </p>
+      </Reveal>
+
+      <Reveal index={1}>
+        <h2 class="text-2xl sm:text-3xl">One container, one scope of supply.</h2>
+        <p class="mt-4 text-lg leading-relaxed text-ink-600">
+          Everything needed to store and return energy arrives as a single
+          unit: cells, racks, management, cooling, fire safety and controls,
+          integrated and tested before it leaves the factory. It lands on a
+          prepared foundation in a standard 20-foot footprint, so site works
+          stay predictable and the shipping is ordinary container logistics.
+        </p>
+
+        <ul class="mt-8 space-y-3.5">
+          {
+            [
+              'High energy density in a standard ISO footprint',
+              'Robust inbuilt safety protections',
+              'High dust and water resistance',
+              'Complies with global environmental standards',
+            ].map((point) => (
+              <li class="flex gap-3 text-[0.9375rem] text-ink-700">
+                <Icon
+                  name="check"
+                  class="mt-0.5 size-5 shrink-0 text-energy-600"
+                />
+                {point}
+              </li>
+            ))
+          }
+        </ul>
+      </Reveal>
+    </div>
+  </Section>
+
+  <!-- Full specification -->
+  <Section tone="muted" width="wide">
+    <SectionHeader
+      eyebrow="Specification"
+      title="Technical data"
+      lead="Configurations are tailored per project. The figures below describe the standard unit."
+      class="mb-10"
+    />
+
+    <Reveal
+      class="overflow-hidden rounded-panel border border-ink-200 bg-white shadow-soft-sm"
+    >
+      <dl class="divide-y divide-ink-200">
+        {
+          podGen1.specs.map((spec) => (
+            <div class="grid gap-1 px-6 py-4 sm:grid-cols-[minmax(0,16rem)_1fr] sm:items-baseline sm:gap-6">
+              <dt class="text-sm font-semibold text-ink-600">{spec.label}</dt>
+              <dd class="font-semibold text-ink-950">
+                {spec.value}
+                {showProvisionalMarkers && !spec.verified && (
+                  <span class="ml-2 rounded bg-ink-100 px-1.5 py-0.5 align-middle text-[0.6875rem] font-semibold tracking-wide text-ink-600 uppercase">
+                    Provisional
+                  </span>
+                )}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </Reveal>
+
+    {
+      showProvisionalMarkers && provisional > 0 && (
+        <Reveal
+          class="mt-5 flex gap-3 rounded-panel border border-ink-200 bg-white p-5"
+          index={1}
+        >
+          <Icon name="clock" class="mt-0.5 size-5 shrink-0 text-ink-400" />
+          <p class="text-sm leading-relaxed text-ink-600">
+            <strong class="font-semibold text-ink-800">
+              {provisional} figures are provisional.
+            </strong>{' '}
+            They are pending final test and certification data and should not
+            be used for procurement. Contact us for the current verified
+            specification sheet.
+          </p>
+        </Reveal>
+      )
+    }
+  </Section>
+
+  <!-- Subsystems -->
+  <Section width="wide">
+    <SectionHeader
+      eyebrow="Inside the pod"
+      title="What the container holds."
+      class="mb-12"
+    />
+    <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        subsystems.map((item, i) => (
+          <FeatureCard
+            icon={item.icon}
+            title={item.title}
+            body={item.body}
+            index={i}
+          />
+        ))
+      }
+    </ul>
+  </Section>
+
+  <CTASection
+    title="Need a configuration for a specific project?"
+    lead="Tell us the plant capacity, the duty cycle and the grid connection terms. We will size a system against them and send back an indicative configuration."
+    secondaryLabel="How the technology works"
+    secondaryHref="/technology/"
+  />
+</BaseLayout>

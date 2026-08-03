@@ -1,0 +1,55 @@
+---
+import Container from './Container.astro';
+import Button from './Button.astro';
+import Reveal from './Reveal.astro';
+
+interface Props {
+  title?: string;
+  lead?: string;
+  primaryLabel?: string;
+  primaryHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+}
+
+const {
+  title = 'Sizing storage for a project?',
+  lead = 'Send us the plant capacity, the duty cycle you need to meet and your target commissioning date. We will come back with an indicative configuration and budgetary numbers.',
+  primaryLabel = 'Start a conversation',
+  primaryHref = '/contact/',
+  secondaryLabel = 'See Pod Gen 1',
+  secondaryHref = '/products/',
+} = Astro.props;
+---
+
+<section class="bg-ink-50 pb-16 sm:pb-20 lg:pb-24">
+  <Container width="wide">
+    <Reveal
+      class="relative overflow-hidden rounded-hero bg-ink-950 px-8 py-14 sm:px-12 sm:py-16 lg:px-16"
+    >
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0 opacity-50"
+        style="background-image:linear-gradient(to right,#1e293b 1px,transparent 1px),linear-gradient(to bottom,#1e293b 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 60% 100% at 100% 50%,#000,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 60% 100% at 100% 50%,#000,transparent 70%)"
+      >
+      </div>
+
+      <div class="relative max-w-2xl">
+        <h2 class="text-3xl leading-tight text-white sm:text-4xl">
+          {title}
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-ink-400">
+          {lead}
+        </p>
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+          <Button href={primaryHref} size="lg" icon="right">
+            {primaryLabel}
+          </Button>
+          <Button href={secondaryHref} size="lg" variant="onDark">
+            {secondaryLabel}
+          </Button>
+        </div>
+      </div>
+    </Reveal>
+  </Container>
+</section>
