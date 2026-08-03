@@ -1,0 +1,78 @@
+---
+import Icon from './Icon.astro';
+import Reveal from './Reveal.astro';
+import type { IconName } from './icons';
+
+interface Props {
+  icon: IconName;
+  title: string;
+  body: string;
+  href?: string;
+  index?: number;
+  tone?: 'light' | 'dark';
+}
+
+const { icon, title, body, href, index = 0, tone = 'light' } = Astro.props;
+
+const isDark = tone === 'dark';
+const Tag = href ? 'a' : 'div';
+---
+
+<Reveal index={index} as="li" class="h-full">
+  <Tag
+    href={href}
+    class:list={[
+      'flex h-full flex-col rounded-panel border p-7 transition-all duration-200',
+      isDark
+        ? 'border-ink-800 bg-ink-900'
+        : 'border-ink-200 bg-white shadow-soft-sm',
+      href && 'group cursor-pointer',
+      href && !isDark && 'hover:border-ink-300 hover:shadow-soft-lg',
+      href && isDark && 'hover:border-ink-700 hover:bg-ink-800',
+    ]}
+  >
+    <span
+      class:list={[
+        'flex size-11 items-center justify-center rounded-lg',
+        isDark ? 'bg-white/10 text-accent-300' : 'bg-accent-50 text-accent-600',
+      ]}
+    >
+      <Icon name={icon} class="size-5" />
+    </span>
+
+    <h3
+      class:list={[
+        'mt-5 text-lg',
+        isDark ? 'text-white' : 'text-ink-950',
+      ]}
+    >
+      {title}
+    </h3>
+
+    <p
+      class:list={[
+        'mt-2.5 flex-1 text-[0.9375rem] leading-relaxed',
+        isDark ? 'text-ink-400' : 'text-ink-600',
+      ]}
+    >
+      {body}
+    </p>
+
+    {
+      href && (
+        <span
+          class:list={[
+            'mt-5 inline-flex items-center gap-1.5 text-sm font-semibold',
+            isDark ? 'text-accent-300' : 'text-accent-600',
+          ]}
+        >
+          Learn more
+          <Icon
+            name="arrowRight"
+            class="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
+          />
+        </span>
+      )
+    }
+  </Tag>
+</Reveal>

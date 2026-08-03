@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import Reveal from '../components/Reveal.astro';
+import Icon from '../components/Icon.astro';
+import ContactForm from '../components/ContactForm';
+import { company } from '../data/site';
+
+const { address } = company;
+---
+
+<BaseLayout
+  title="Contact"
+  description="Talk to Urjapod Energy about battery energy storage for your solar, wind or hybrid power plant. Based in Navrangpura, Ahmedabad, Gujarat."
+>
+  <PageHeader
+    eyebrow="Contact"
+    title="Tell us about the project."
+    lead="Plant capacity, the duty cycle you need to meet, your grid connection terms and a target date are enough for us to come back with something useful."
+  />
+
+  <Section width="wide">
+    <div class="grid gap-12 lg:grid-cols-[1.25fr_1fr] lg:gap-16">
+      <Reveal>
+        <h2 class="text-2xl">Send us a message</h2>
+        <p class="mt-3 text-ink-600">
+          Fields marked with an asterisk are required.
+        </p>
+        <div class="mt-8">
+          <!-- The only hydrated component on the site: loads when it scrolls
+               into view, so the rest of the page stays zero-JS. -->
+          <ContactForm client:visible />
+        </div>
+      </Reveal>
+
+      <Reveal index={1}>
+        <div class="rounded-panel border border-ink-200 bg-white p-8 shadow-soft-sm">
+          <h2 class="text-xl">Reach us directly</h2>
+
+          <ul class="mt-7 space-y-6">
+            <li class="flex gap-4">
+              <span
+                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent-50 text-accent-600"
+              >
+                <Icon name="mail" class="size-5" />
+              </span>
+              <div>
+                <p class="text-xs font-bold tracking-[0.12em] text-ink-600 uppercase">
+                  Email
+                </p>
+                <a
+                  href={`mailto:${company.email}`}
+                  class="mt-1 block font-semibold text-ink-900 transition-colors hover:text-accent-600"
+                >
+                  {company.email}
+                </a>
+              </div>
+            </li>
+
+            <li class="flex gap-4">
+              <span
+                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent-50 text-accent-600"
+              >
+                <Icon name="phone" class="size-5" />
+              </span>
+              <div>
+                <p class="text-xs font-bold tracking-[0.12em] text-ink-600 uppercase">
+                  Phone
+                </p>
+                <a
+                  href={`tel:${company.phoneHref}`}
+                  class="mt-1 block font-semibold text-ink-900 transition-colors hover:text-accent-600"
+                >
+                  {company.phone}
+                </a>
+              </div>
+            </li>
+
+            <li class="flex gap-4">
+              <span
+                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent-50 text-accent-600"
+              >
+                <Icon name="mapPin" class="size-5" />
+              </span>
+              <div>
+                <p class="text-xs font-bold tracking-[0.12em] text-ink-600 uppercase">
+                  Office
+                </p>
+                <address class="mt-1 leading-relaxed font-semibold text-ink-900 not-italic">
+                  {address.line1}<br />
+                  {address.line2}<br />
+                  {address.city}, {address.state} {address.postcode}<br />
+                  {address.country}
+                </address>
+              </div>
+            </li>
+
+            <li class="flex gap-4">
+              <span
+                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent-50 text-accent-600"
+              >
+                <Icon name="linkedin" class="size-5" />
+              </span>
+              <div>
+                <p class="text-xs font-bold tracking-[0.12em] text-ink-600 uppercase">
+                  LinkedIn
+                </p>
+                <a
+                  href={company.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="mt-1 inline-flex items-center gap-1.5 font-semibold text-ink-900 transition-colors hover:text-accent-600"
+                >
+                  Urjapod Energy
+                  <Icon name="arrowUpRight" class="size-4" />
+                </a>
+              </div>
+            </li>
+          </ul>
+
+          <div class="mt-8 border-t border-ink-200 pt-6">
+            <p class="text-xs font-bold tracking-[0.12em] text-ink-600 uppercase">
+              Registered entity
+            </p>
+            <p class="mt-2 text-sm leading-relaxed text-ink-600">
+              {company.legalName}<br />
+              CIN <span class="font-mono">{company.cin}</span><br />
+              Incorporated {company.incorporated}, {company.registrar}
+            </p>
+          </div>
+        </div>
+      </Reveal>
+    </div>
+  </Section>
+</BaseLayout>

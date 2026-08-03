@@ -1,0 +1,178 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import CTASection from '../components/CTASection.astro';
+import Reveal from '../components/Reveal.astro';
+import Icon from '../components/Icon.astro';
+import { company } from '../data/site';
+
+const principles = [
+  {
+    icon: 'shield',
+    title: 'Safety is not a feature',
+    body: 'It is the precondition. We choose chemistry, design thermal systems and specify suppression on the assumption that something will eventually go wrong, and that no single failure should matter.',
+  },
+  {
+    icon: 'gauge',
+    title: 'Built for the whole asset life',
+    body: 'A storage system is a twenty-year commitment, not a purchase. We optimise for what the asset does in year twelve, not for the number that looks best on a datasheet in year one.',
+  },
+  {
+    icon: 'leaf',
+    title: '100% green, end to end',
+    body: 'Storage exists to let renewable generation displace fossil generation. That is the whole point, and it is the measure we hold our own projects to.',
+  },
+  {
+    icon: 'factory',
+    title: 'Made in India, for India',
+    body: 'Indian grid conditions, Indian ambient temperatures, Indian tariff structures. Building here means the product is designed against the conditions it will actually operate in.',
+  },
+] as const;
+
+const { address } = company;
+
+const facts = [
+  { label: 'Legal name', value: company.legalName },
+  { label: 'CIN', value: company.cin, mono: true },
+  { label: 'Incorporated', value: company.incorporated },
+  { label: 'Registrar', value: company.registrar },
+  { label: 'Company type', value: 'Private limited, non-government' },
+  { label: 'Industry', value: 'Manufacture of electrical equipment' },
+] as const;
+---
+
+<BaseLayout
+  title="About"
+  description="Urjapod Energy Private Limited is an Ahmedabad-based battery energy storage company building grid-scale BESS for renewable power plants across India."
+>
+  <PageHeader
+    eyebrow="About"
+    title="Energy storage is the bottleneck. We are working on the bottleneck."
+    lead="Urjapod Energy is a battery energy storage company based in Ahmedabad, Gujarat, building grid-scale systems for renewable power plants across India."
+  />
+
+  <!-- Mission -->
+  <Section width="default">
+    <div class="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
+      <Reveal>
+        <h2 class="text-xs font-bold tracking-[0.14em] text-accent-600 uppercase">
+          Our mission
+        </h2>
+      </Reveal>
+      <Reveal index={1}>
+        <p class="text-2xl leading-snug font-semibold text-ink-950">
+          Energy storage is critical to the further adoption of renewable
+          energy.
+        </p>
+        <div class="mt-6 space-y-5 text-lg leading-relaxed text-ink-600">
+          <p>
+            India is adding renewable capacity faster than almost anywhere on
+            earth. But solar produces at midday and wind produces when it
+            feels like it, while demand peaks in the evening and the grid needs
+            stability every second in between. Without storage, every megawatt
+            of renewable capacity added past a certain point either gets
+            curtailed or gets backed up by something that burns fuel.
+          </p>
+          <p>
+            We build the systems that close that gap: high-tech, reliable and
+            cost-effective battery energy storage. Our ambition is a plain one
+            — to be India's best and most reliable BESS brand, and to be a
+            partner our customers can hand the whole problem to, from concept
+            through to commissioning and the twenty years that follow.
+          </p>
+        </div>
+      </Reveal>
+    </div>
+  </Section>
+
+  <!-- Principles -->
+  <Section tone="muted" width="wide">
+    <SectionHeader
+      eyebrow="How we build"
+      title="Four things we will not trade away."
+      class="mb-12"
+    />
+    <ul class="grid gap-5 sm:grid-cols-2">
+      {
+        principles.map((p, i) => (
+          <Reveal as="li" index={i} class="h-full">
+            <div class="flex h-full gap-5 rounded-panel border border-ink-200 bg-white p-7 shadow-soft-sm">
+              <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-accent-50 text-accent-600">
+                <Icon name={p.icon} class="size-5" />
+              </span>
+              <div>
+                <h3 class="text-lg text-ink-950">{p.title}</h3>
+                <p class="mt-2.5 text-[0.9375rem] leading-relaxed text-ink-600">
+                  {p.body}
+                </p>
+              </div>
+            </div>
+          </Reveal>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <!-- Company record -->
+  <Section width="wide">
+    <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
+      <Reveal>
+        <h2 class="text-3xl leading-tight sm:text-4xl">Company record</h2>
+        <p class="mt-4 text-lg leading-relaxed text-ink-600">
+          For procurement, tender and due-diligence purposes, our registration
+          details are below. We are happy to provide incorporation documents,
+          GST registration and bank references on request.
+        </p>
+
+        <div
+          class="mt-8 flex gap-4 rounded-panel border border-ink-200 bg-white p-6 shadow-soft-sm"
+        >
+          <Icon name="mapPin" class="mt-0.5 size-5 shrink-0 text-accent-600" />
+          <div>
+            <p class="text-xs font-bold tracking-[0.12em] text-ink-600 uppercase">
+              Registered office
+            </p>
+            <address class="mt-2 leading-relaxed font-medium text-ink-800 not-italic">
+              {address.line1}<br />
+              {address.line2}<br />
+              {address.city}, {address.state} {address.postcode}<br />
+              {address.country}
+            </address>
+          </div>
+        </div>
+      </Reveal>
+
+      <Reveal
+        index={1}
+        class="overflow-hidden rounded-panel border border-ink-200 bg-white shadow-soft-sm"
+      >
+        <dl class="divide-y divide-ink-200">
+          {
+            facts.map((fact) => (
+              <div class="grid gap-1 px-6 py-4 sm:grid-cols-[minmax(0,10rem)_1fr] sm:items-baseline sm:gap-5">
+                <dt class="text-sm font-semibold text-ink-600">{fact.label}</dt>
+                <dd
+                  class:list={[
+                    'font-semibold text-ink-950',
+                    'mono' in fact && fact.mono && 'font-mono text-sm',
+                  ]}
+                >
+                  {fact.value}
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </Reveal>
+    </div>
+  </Section>
+
+  <CTASection
+    title="Working on a project we should know about?"
+    lead="Whether you are scoping storage for a plant, evaluating suppliers for a tender, or just want to understand what a system would cost, we are glad to talk."
+    secondaryLabel="See our technology"
+    secondaryHref="/technology/"
+  />
+</BaseLayout>

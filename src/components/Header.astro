@@ -1,0 +1,128 @@
+---
+import Container from './Container.astro';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import Button from './Button.astro';
+import { nav } from '../data/site';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<header
+  class="sticky top-0 z-50 border-b border-ink-200/80 bg-ink-50/85 backdrop-blur-md supports-[backdrop-filter]:bg-ink-50/70"
+>
+  <Container width="wide">
+    <div class="flex h-16 items-center justify-between gap-4 lg:h-18">
+      <a
+        href="/"
+        class="rounded-md transition-opacity hover:opacity-80"
+        aria-label="Urjapod Energy — home"
+      >
+        <Logo />
+      </a>
+
+      <nav aria-label="Primary" class="hidden items-center gap-1 lg:flex">
+        {
+          nav.map((item) => (
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              class:list={[
+                'rounded-md px-3.5 py-2 text-[0.9375rem] font-medium transition-colors duration-200',
+                isActive(item.href)
+                  ? 'text-ink-950'
+                  : 'text-ink-600 hover:text-ink-950',
+              ]}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="hidden lg:block">
+        <Button href="/contact/" size="sm" icon="right">Talk to us</Button>
+      </div>
+
+      <button
+        type="button"
+        id="nav-toggle"
+        class="inline-flex size-11 cursor-pointer items-center justify-center rounded-lg text-ink-800 transition-colors hover:bg-ink-100 lg:hidden"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+      >
+        <Icon name="menu" class="size-6" id="nav-icon-open" />
+        <Icon name="x" class="hidden size-6" id="nav-icon-close" />
+      </button>
+    </div>
+  </Container>
+
+  <!-- Mobile panel. Rendered in the HTML and toggled with `hidden`, so it
+       needs no framework and appears instantly on first tap. -->
+  <div
+    id="mobile-nav"
+    class="hidden border-t border-ink-200 bg-ink-50 lg:hidden"
+  >
+    <Container width="wide">
+      <nav aria-label="Mobile" class="flex flex-col gap-1 py-4">
+        {
+          nav.map((item) => (
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              class:list={[
+                'rounded-lg px-3 py-3 text-base font-medium transition-colors',
+                isActive(item.href)
+                  ? 'bg-ink-100 text-ink-950'
+                  : 'text-ink-700 hover:bg-ink-100 hover:text-ink-950',
+              ]}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+        <Button href="/contact/" class="mt-3 w-full" icon="right">
+          Talk to us
+        </Button>
+      </nav>
+    </Container>
+  </div>
+</header>
+
+<script>
+  // Mobile nav. Deliberately vanilla: this runs on every page, and a React
+  // island would cost ~45 KB of runtime to toggle one class.
+  const toggle = document.getElementById('nav-toggle');
+  const panel = document.getElementById('mobile-nav');
+  const iconOpen = document.getElementById('nav-icon-open');
+  const iconClose = document.getElementById('nav-icon-close');
+
+  if (toggle && panel && iconOpen && iconClose) {
+    const setOpen = (open: boolean) => {
+      panel.classList.toggle('hidden', !open);
+      iconOpen.classList.toggle('hidden', open);
+      iconClose.classList.toggle('hidden', !open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+
+    toggle.addEventListener('click', () =>
+      setOpen(panel.classList.contains('hidden'))
+    );
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !panel.classList.contains('hidden')) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // Reset when the viewport grows past the breakpoint mid-session.
+    matchMedia('(min-width: 1024px)').addEventListener('change', (e) => {
+      if (e.matches) setOpen(false);
+    });
+  }
+</script>

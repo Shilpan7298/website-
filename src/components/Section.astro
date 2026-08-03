@@ -1,0 +1,39 @@
+---
+import Container from './Container.astro';
+
+interface Props {
+  id?: string;
+  class?: string;
+  /** Background treatment. `dark` flips to navy with light text. */
+  tone?: 'default' | 'muted' | 'dark';
+  width?: 'narrow' | 'default' | 'wide';
+  /** Vertical rhythm. Density 4/10 — standard. */
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const {
+  id,
+  class: className = '',
+  tone = 'default',
+  width = 'default',
+  size = 'md',
+} = Astro.props;
+
+const tones = {
+  default: 'bg-ink-50 text-ink-800',
+  muted: 'bg-ink-100 text-ink-800',
+  dark: 'bg-ink-950 text-ink-300',
+} as const;
+
+const sizes = {
+  sm: 'py-14 sm:py-16',
+  md: 'py-16 sm:py-20 lg:py-24',
+  lg: 'py-20 sm:py-28 lg:py-32',
+} as const;
+---
+
+<section id={id} class={`${tones[tone]} ${sizes[size]} ${className}`}>
+  <Container width={width}>
+    <slot />
+  </Container>
+</section>

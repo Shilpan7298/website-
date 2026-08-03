@@ -1,0 +1,176 @@
+---
+import Icon from './Icon.astro';
+
+/**
+ * Chemistry comparison — structure adapted from "Feature Comparison Table"
+ * by @7ovr on 21st.dev (https://21st.dev/@7ovr/components/comparison-3).
+ *
+ * Retrieved via the 21st.dev MCP and rewritten as static Astro: the original
+ * is React on shadcn Table/Badge/Button plus @remixicon/react and
+ * class-variance-authority. The grouped-section rows, highlighted column and
+ * check/cross cell treatment are kept; the pricing-plan content and all four
+ * runtime dependencies are gone.
+ *
+ * Figures are indicative of each chemistry in general, drawn from widely
+ * published cell-level characteristics — they are NOT Pod Gen 1 system
+ * specifications. System numbers live on the product page.
+ */
+
+type Cell = boolean | string;
+
+const columns = [
+  { name: 'LFP', note: 'Pod Gen 1 today', highlighted: true },
+  { name: 'Sodium-ion', note: 'Prototype in development', highlighted: false },
+  { name: 'NMC', note: 'Not used by Urjapod', highlighted: false },
+] as const;
+
+const groups: { section: string; rows: { label: string; values: [Cell, Cell, Cell] }[] }[] = [
+  {
+    section: 'Safety',
+    rows: [
+      { label: 'Thermal stability', values: ['High', 'High', 'Moderate'] },
+      { label: 'Thermal runaway onset', values: ['~270 °C', '~250 °C', '~170 °C'] },
+      { label: 'Safe at 0% state of charge', values: [false, true, false] },
+    ],
+  },
+  {
+    section: 'Performance',
+    rows: [
+      { label: 'Cell energy density', values: ['150–180 Wh/kg', '120–160 Wh/kg', '200–250 Wh/kg'] },
+      { label: 'Typical cycle life', values: ['6,000–10,000', '3,000–6,000', '2,000–4,000'] },
+      { label: 'Cold-weather performance', values: ['Moderate', 'Strong', 'Moderate'] },
+      { label: 'Suited to daily grid cycling', values: [true, true, false] },
+    ],
+  },
+  {
+    section: 'Materials and supply',
+    rows: [
+      { label: 'Cobalt-free', values: [true, true, false] },
+      { label: 'Nickel-free', values: [true, true, false] },
+      { label: 'Lithium-free', values: [false, true, false] },
+      { label: 'Raw-material price exposure', values: ['Low', 'Very low', 'High'] },
+    ],
+  },
+];
+---
+
+<!-- Scroll affordance: the table is wider than a phone, so say so rather than
+     leaving people to discover it by accident. Hidden once the table fits. -->
+<p class="mb-3 flex items-center gap-1.5 text-sm text-ink-600 md:hidden">
+  <Icon name="arrowRight" class="size-4" />
+  Scroll the table sideways to compare
+</p>
+
+<div
+  class="overflow-x-auto overscroll-x-contain rounded-panel border border-ink-200 bg-white shadow-soft-sm"
+  tabindex="0"
+  role="region"
+  aria-label="Battery chemistry comparison, scrollable"
+>
+  <table class="w-full min-w-[42rem] text-left text-sm">
+    <caption class="sr-only">
+      Comparison of LFP, sodium-ion and NMC battery chemistries across safety,
+      performance, and materials and supply.
+    </caption>
+
+    <thead>
+      <tr class="border-b border-ink-200">
+        <th
+          scope="col"
+          class="w-[34%] px-5 py-4 align-bottom text-xs font-bold tracking-[0.12em] text-ink-600 uppercase"
+        >
+          Characteristic
+        </th>
+        {
+          columns.map((col) => (
+            <th
+              scope="col"
+              class:list={[
+                'px-5 py-4 text-center align-bottom',
+                col.highlighted && 'bg-accent-50',
+              ]}
+            >
+              <span class="block text-base font-bold text-ink-950">
+                {col.name}
+              </span>
+              <span
+                class:list={[
+                  'mt-1 block text-xs font-medium',
+                  col.highlighted ? 'text-accent-700' : 'text-ink-600',
+                ]}
+              >
+                {col.note}
+              </span>
+            </th>
+          ))
+        }
+      </tr>
+    </thead>
+
+    <tbody>
+      {
+        groups.map((group) => (
+          <>
+            <tr class="bg-ink-100">
+              <th
+                scope="colgroup"
+                colspan="4"
+                class="px-5 py-2.5 text-left text-xs font-bold tracking-[0.12em] text-ink-800 uppercase"
+              >
+                {group.section}
+              </th>
+            </tr>
+
+            {group.rows.map((row) => (
+              <tr class="border-b border-ink-200/70 last:border-0">
+                <th
+                  scope="row"
+                  class="px-5 py-3.5 text-left font-medium text-ink-800"
+                >
+                  {row.label}
+                </th>
+                {row.values.map((value, i) => (
+                  <td
+                    class:list={[
+                      'px-5 py-3.5 text-center',
+                      columns[i].highlighted && 'bg-accent-50/60',
+                    ]}
+                  >
+                    {typeof value === 'boolean' ? (
+                      value ? (
+                        <span class="mx-auto flex size-5 items-center justify-center rounded-full bg-energy-600">
+                          <Icon name="check" class="size-3" strokeWidth={3} />
+                          <span class="sr-only">Yes</span>
+                        </span>
+                      ) : (
+                        <span class="mx-auto flex size-5 items-center justify-center rounded-full bg-ink-200">
+                          <Icon name="x" class="size-3 text-ink-600" strokeWidth={3} />
+                          <span class="sr-only">No</span>
+                        </span>
+                      )
+                    ) : (
+                      <span
+                        class:list={[
+                          'font-medium',
+                          columns[i].highlighted ? 'text-ink-900' : 'text-ink-600',
+                        ]}
+                      >
+                        {value}
+                      </span>
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<p class="mt-4 text-sm text-ink-600">
+  Indicative cell-level characteristics for each chemistry in general, not
+  Pod&nbsp;Gen&nbsp;1 system specifications. Actual performance depends on cell
+  supplier, pack design and duty cycle.
+</p>

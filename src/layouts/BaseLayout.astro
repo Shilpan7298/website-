@@ -1,0 +1,130 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { company, siteUrl } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Omit the "| Urjapod Energy" suffix (used by the home page). */
+  bareTitle?: boolean;
+}
+
+const { title, description, bareTitle = false } = Astro.props;
+
+const fullTitle = bareTitle ? title : `${title} | ${company.name}`;
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const ogImage = new URL('/og.png', siteUrl).href;
+
+const { address } = company;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: company.legalName,
+  alternateName: company.name,
+  url: siteUrl,
+  logo: new URL('/favicon.svg', siteUrl).href,
+  description:
+    'Urjapod Energy designs and builds grid-scale battery energy storage systems (BESS) for renewable power plants in India.',
+  email: company.email,
+  telephone: company.phone,
+  foundingDate: '2025-05-29',
+  identifier: company.cin,
+  sameAs: [company.linkedin],
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: `${address.line1}, ${address.line2}`,
+    addressLocality: address.city,
+    addressRegion: address.state,
+    postalCode: address.postcode,
+    addressCountry: 'IN',
+  },
+};
+---
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Preload the one font file before CSS discovers it, so text paints
+         in the real typeface rather than swapping. -->
+    <link
+      rel="preload"
+      href="/fonts/plus-jakarta-sans-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#0f172a" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={company.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script is:inline set:html={JSON.stringify(jsonLd)} type="application/ld+json" />
+
+    <!-- Swap the no-js class before first paint so reveal animations are
+         armed only when JS can actually un-hide them. -->
+    <script is:inline>
+      document.documentElement.classList.remove('no-js');
+    </script>
+  </head>
+
+  <body class="flex min-h-screen flex-col">
+    <a
+      href="#main"
+      class="sr-only rounded-lg bg-accent-600 px-4 py-2 font-semibold text-white focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[100]"
+    >
+      Skip to content
+    </a>
+
+    <Header />
+
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script>
+      // Single shared observer for every `.reveal` on the page. One listener,
+      // unobserved on first intersection — no scroll handler, no library.
+      const reveals = document.querySelectorAll<HTMLElement>('.reveal');
+
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.05 }
+        );
+
+        reveals.forEach((el) => io.observe(el));
+      } else {
+        reveals.forEach((el) => el.classList.add('is-visible'));
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,217 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import CTASection from '../components/CTASection.astro';
+import Reveal from '../components/Reveal.astro';
+import Icon from '../components/Icon.astro';
+import type { IconName } from '../components/icons';
+
+interface Solution {
+  id: string;
+  icon: IconName;
+  eyebrow: string;
+  title: string;
+  body: string;
+  problem: string;
+  delivers: string[];
+}
+
+const solutions: Solution[] = [
+  {
+    id: 'solar',
+    icon: 'sun',
+    eyebrow: 'Solar',
+    title: 'Firming and evening shift',
+    body: 'A solar plant produces hardest at midday and stops entirely by evening — which is precisely when demand peaks. Storage moves that generation across the day so it is sold into the hours that pay for it, and so the plant can commit to a schedule instead of a forecast.',
+    problem:
+      'Generation peaks at midday; demand and tariffs peak in the evening.',
+    delivers: [
+      'Shift midday surplus into the evening ramp',
+      'Meet a committed dispatch schedule',
+      'Reduce curtailment when the grid will not take the output',
+      'Smooth cloud-induced ramps at the point of connection',
+    ],
+  },
+  {
+    id: 'wind',
+    icon: 'wind',
+    eyebrow: 'Wind',
+    title: 'Output smoothing and schedule compliance',
+    body: 'Wind output moves minute to minute, and grid codes increasingly penalise deviation from schedule. A battery sitting at the connection point absorbs the variability, so the plant presents a stable, predictable profile to the grid regardless of what the turbines are doing.',
+    problem:
+      'Minute-to-minute variability triggers deviation penalties and limits how much capacity a connection can host.',
+    delivers: [
+      'Absorb short-term output variability',
+      'Hold generation inside scheduling tolerances',
+      'Reduce deviation settlement charges',
+      'Support ramp-rate compliance obligations',
+    ],
+  },
+  {
+    id: 'grid',
+    icon: 'grid',
+    eyebrow: 'Grid',
+    title: 'Ancillary services and reserve',
+    body: 'Frequency response is a question of how fast a resource can change output. A thermal plant takes minutes; a battery takes milliseconds. That speed makes storage the natural provider of regulation, reserve and voltage support as more inverter-based generation displaces spinning mass.',
+    problem:
+      'Falling system inertia leaves the grid with less margin to absorb sudden imbalance.',
+    delivers: [
+      'Primary and secondary frequency regulation',
+      'Fast spinning-reserve replacement',
+      'Voltage and reactive power support',
+      'Black-start capability where the project calls for it',
+    ],
+  },
+  {
+    id: 'ci',
+    icon: 'factory',
+    eyebrow: 'Commercial and industrial',
+    title: 'Peak shaving and backup',
+    body: 'For an industrial consumer, a large share of the bill is demand charges set by a handful of peak intervals. Storage clips those peaks and carries critical load through an outage — doing the job a diesel set does, without the fuel, the emissions or the start-up delay.',
+    problem:
+      'Demand charges are set by a few peak intervals; outages need instant cover.',
+    delivers: [
+      'Clip demand peaks to cut demand charges',
+      'Arbitrage time-of-use tariffs',
+      'Seamless backup for critical load',
+      'Increase self-consumption from rooftop solar',
+    ],
+  },
+];
+
+const services = [
+  {
+    icon: 'layers' as IconName,
+    title: 'Design and feasibility',
+    body: 'Load and generation profiling, system sizing, tariff and revenue modelling, single-line design, and the documentation your lender or offtaker needs.',
+  },
+  {
+    icon: 'building' as IconName,
+    title: 'Construction and integration',
+    body: 'Civil and electrical works, delivery and placement, integration with existing inverters, plant controllers and SCADA, commissioning and grid compliance testing.',
+  },
+  {
+    icon: 'gauge' as IconName,
+    title: 'Operations and maintenance',
+    body: 'Remote monitoring and alarm response, scheduled preventive servicing, annual capacity testing, spares management and warranty administration.',
+  },
+];
+---
+
+<BaseLayout
+  title="Solutions — Solar, Wind, Grid and C&I Storage"
+  description="Battery energy storage for solar firming, wind smoothing, grid ancillary services and commercial peak shaving — plus design, construction and O&M for solar, wind and hybrid power plants."
+>
+  <PageHeader
+    eyebrow="Solutions"
+    title="Same hardware. Very different business cases."
+    lead="A battery for evening tariff arbitrage and a battery for frequency regulation are sized, configured and operated differently. We start from the case you are building, not from the box we sell."
+  />
+
+  <!-- Quick jump -->
+  <div class="border-b border-ink-200 bg-ink-100">
+    <nav
+      aria-label="Solutions"
+      class="mx-auto flex w-full max-w-7xl gap-2 overflow-x-auto px-5 py-4 sm:px-6 lg:px-8"
+    >
+      {
+        solutions.map((s) => (
+          <a
+            href={`#${s.id}`}
+            class="inline-flex shrink-0 items-center gap-2 rounded-full border border-ink-200 bg-white px-4 py-2 text-sm font-medium text-ink-700 transition-colors hover:border-ink-300 hover:text-ink-950"
+          >
+            <Icon name={s.icon} class="size-4 text-accent-600" />
+            {s.eyebrow}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+
+  <!-- Deep dives -->
+  {
+    solutions.map((s, i) => (
+      <Section
+        id={s.id}
+        width="wide"
+        tone={i % 2 === 1 ? 'muted' : 'default'}
+        size="sm"
+      >
+        <div class="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+          <Reveal>
+            <span class="inline-flex items-center gap-2 rounded-full bg-accent-50 px-3.5 py-1.5 text-xs font-bold tracking-wider text-accent-700 uppercase">
+              <Icon name={s.icon} class="size-4" />
+              {s.eyebrow}
+            </span>
+            <h2 class="mt-5 text-3xl leading-tight sm:text-[2.25rem]">
+              {s.title}
+            </h2>
+            <p class="mt-5 text-lg leading-relaxed text-ink-600">{s.body}</p>
+
+            <div class="mt-7 rounded-panel border-l-4 border-accent-600 bg-white/70 py-4 pr-4 pl-5">
+              <p class="text-xs font-bold tracking-[0.12em] text-ink-600 uppercase">
+                The problem
+              </p>
+              <p class="mt-1.5 font-medium text-ink-800">{s.problem}</p>
+            </div>
+          </Reveal>
+
+          <Reveal
+            index={1}
+            class="rounded-panel border border-ink-200 bg-white p-8 shadow-soft-sm"
+          >
+            <h3 class="text-xs font-bold tracking-[0.12em] text-ink-600 uppercase">
+              What the system delivers
+            </h3>
+            <ul class="mt-5 space-y-4">
+              {s.delivers.map((item) => (
+                <li class="flex gap-3 text-[0.9375rem] leading-relaxed text-ink-700">
+                  <Icon
+                    name="check"
+                    class="mt-0.5 size-5 shrink-0 text-energy-600"
+                  />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
+      </Section>
+    ))
+  }
+
+  <!-- Services -->
+  <Section tone="dark" width="wide">
+    <SectionHeader
+      eyebrow="Services"
+      title="We do not just ship the container."
+      lead="Urjapod provides project design, construction, and operation and maintenance for solar, wind and hybrid power plants — so the storage is engineered into the plant rather than bolted onto it."
+      tone="dark"
+      class="mb-12"
+    />
+    <ul class="grid gap-5 md:grid-cols-3">
+      {
+        services.map((service, i) => (
+          <Reveal as="li" index={i} class="h-full">
+            <div class="flex h-full flex-col rounded-panel border border-ink-800 bg-ink-900 p-7">
+              <span class="flex size-11 items-center justify-center rounded-lg bg-white/10 text-accent-300">
+                <Icon name={service.icon} class="size-5" />
+              </span>
+              <h3 class="mt-5 text-lg text-white">{service.title}</h3>
+              <p class="mt-2.5 text-[0.9375rem] leading-relaxed text-ink-400">
+                {service.body}
+              </p>
+            </div>
+          </Reveal>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <CTASection
+    title="Which case are you building?"
+    lead="Send us the generation profile, the tariff structure and the grid connection terms. We will model the storage against them and come back with a configuration and indicative numbers."
+  />
+</BaseLayout>
