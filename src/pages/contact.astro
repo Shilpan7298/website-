@@ -7,6 +7,14 @@ import Icon from '../components/Icon.astro';
 import ContactForm from '../components/ContactForm';
 import { company } from '../data/site';
 
+/**
+ * Contact page — the only page on the site that ships React.
+ *
+ * The direct-contact card beside the form is deliberate redundancy: it is
+ * plain HTML, so email, phone and address stay reachable even if the form's
+ * JavaScript fails to load or is blocked. Never remove it in favour of
+ * "just use the form".
+ */
 const { address } = company;
 ---
 
@@ -28,8 +36,8 @@ const { address } = company;
           Fields marked with an asterisk are required.
         </p>
         <div class="mt-8">
-          <!-- The only hydrated component on the site: loads when it scrolls
-               into view, so the rest of the page stays zero-JS. -->
+          {/* The only hydrated component on the site: loads when it scrolls
+               into view, so the rest of the page stays zero-JS. */}
           <ContactForm client:visible />
         </div>
       </Reveal>

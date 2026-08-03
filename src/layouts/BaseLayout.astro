@@ -1,4 +1,17 @@
 ---
+/**
+ * The single HTML shell for every page: <head>, header, main, footer.
+ *
+ * Owns four things no individual page should duplicate —
+ *   1. SEO and social metadata (title, canonical, OG, Twitter)
+ *   2. Organization JSON-LD, so search engines get the company record
+ *   3. The font preload, which must fire before CSS discovers the @font-face
+ *   4. The one IntersectionObserver that drives every .reveal on the page
+ *
+ * Importing global.css here is what pulls Tailwind into the build. It is
+ * imported exactly once, site-wide, and Astro emits a single shared
+ * stylesheet from it.
+ */
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -53,8 +66,8 @@ const jsonLd = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
 
-    <!-- Preload the one font file before CSS discovers it, so text paints
-         in the real typeface rather than swapping. -->
+    {/* Preload the one font file before CSS discovers it, so text paints
+         in the real typeface rather than swapping. */}
     <link
       rel="preload"
       href="/fonts/plus-jakarta-sans-latin.woff2"
@@ -80,8 +93,8 @@ const jsonLd = {
 
     <script is:inline set:html={JSON.stringify(jsonLd)} type="application/ld+json" />
 
-    <!-- Swap the no-js class before first paint so reveal animations are
-         armed only when JS can actually un-hide them. -->
+    {/* Swap the no-js class before first paint so reveal animations are
+         armed only when JS can actually un-hide them. */}
     <script is:inline>
       document.documentElement.classList.remove('no-js');
     </script>

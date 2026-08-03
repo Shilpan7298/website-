@@ -8,6 +8,16 @@ import Reveal from '../components/Reveal.astro';
 import Icon from '../components/Icon.astro';
 import { company } from '../data/site';
 
+/**
+ * About page.
+ *
+ * The mission copy paraphrases Urjapod's own public statement ("energy storage
+ * is critical for further adoption of renewable energy"; the ambition to be
+ * India's best and most reliable BESS brand) rather than inventing a new one.
+ *
+ * The company-record table exists for procurement and tender due diligence —
+ * buyers look for CIN and registration details before they look at specs.
+ */
 const principles = [
   {
     icon: 'shield',
@@ -53,7 +63,7 @@ const facts = [
     lead="Urjapod Energy is a battery energy storage company based in Ahmedabad, Gujarat, building grid-scale systems for renewable power plants across India."
   />
 
-  <!-- Mission -->
+  {/* Mission */}
   <Section width="default">
     <div class="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
       <Reveal>
@@ -87,7 +97,7 @@ const facts = [
     </div>
   </Section>
 
-  <!-- Principles -->
+  {/* Principles */}
   <Section tone="muted" width="wide">
     <SectionHeader
       eyebrow="How we build"
@@ -115,7 +125,7 @@ const facts = [
     </ul>
   </Section>
 
-  <!-- Company record -->
+  {/* Company record */}
   <Section width="wide">
     <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
       <Reveal>

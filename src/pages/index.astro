@@ -12,6 +12,18 @@ import Button from '../components/Button.astro';
 import PodVisual from '../components/PodVisual.astro';
 import { podGen1, showProvisionalMarkers } from '../data/site';
 
+/**
+ * Home page.
+ *
+ * Section order follows the "Enterprise Gateway" pattern from the design
+ * system: hero → what we do → applications → the product → R&D → process →
+ * CTA. The intent is that a visitor can stop reading at any point and still
+ * have got something useful.
+ *
+ * Page-local content (applications, process) is defined here rather than in
+ * src/data/site.ts because nothing else uses it. Only facts and figures that
+ * appear in more than one place, or that need auditing, live in site.ts.
+ */
 const applications = [
   {
     icon: 'sun',
@@ -65,7 +77,7 @@ const headlineSpecs = podGen1.specs.slice(0, 6);
 >
   <Hero />
 
-  <!-- Capability bento -->
+  {/* Capability bento */}
   <Section tone="muted" width="wide">
     <SectionHeader
       eyebrow="What we do"
@@ -76,7 +88,7 @@ const headlineSpecs = podGen1.specs.slice(0, 6);
     <CapabilityBento />
   </Section>
 
-  <!-- Applications -->
+  {/* Applications */}
   <Section id="applications" width="wide">
     <SectionHeader
       eyebrow="Applications"
@@ -99,7 +111,7 @@ const headlineSpecs = podGen1.specs.slice(0, 6);
     </ul>
   </Section>
 
-  <!-- Pod Gen 1 -->
+  {/* Pod Gen 1 */}
   <Section tone="muted" width="wide">
     <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
       <Reveal>
@@ -154,7 +166,7 @@ const headlineSpecs = podGen1.specs.slice(0, 6);
     </div>
   </Section>
 
-  <!-- Sodium-ion R&D -->
+  {/* Sodium-ion R&D */}
   <Section tone="dark" width="wide">
     <div class="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
       <Reveal>
@@ -191,7 +203,7 @@ const headlineSpecs = podGen1.specs.slice(0, 6);
     </div>
   </Section>
 
-  <!-- Process -->
+  {/* Process */}
   <Section width="wide">
     <SectionHeader
       eyebrow="How we work"

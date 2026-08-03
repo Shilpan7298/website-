@@ -1,10 +1,23 @@
 ---
+/**
+ * Home page hero. Home-page-only, so it lives here rather than in PageHeader
+ * (which every other page uses).
+ *
+ * Contains the page's single <h1>. Everything above the fold is static HTML
+ * with no image request, so the largest contentful paint is text in a
+ * preloaded font — the fastest LCP available short of an empty page.
+ *
+ * Deliberately NOT wrapped in <Reveal>: the hero is visible immediately, and
+ * fading in the headline would delay the content people came for.
+ */
 import Container from './Container.astro';
 import Button from './Button.astro';
 import PodVisual from './PodVisual.astro';
 import Icon from './Icon.astro';
 import { company } from '../data/site';
 
+// Scannable proof points beside the product visual. Kept to four: this is a
+// glance, not the spec table (that lives on /products/).
 const chips = [
   { icon: 'container', label: '20 ft ISO container' },
   { icon: 'battery', label: 'Prismatic LFP cells' },
@@ -14,7 +27,12 @@ const chips = [
 ---
 
 <section class="relative overflow-hidden bg-ink-50">
-  <!-- Engineering-drawing grid, faded out toward the edges. -->
+  {/* Engineering-drawing grid. Two CSS gradients rather than an image, and a
+       radial mask fades it out at the edges so it never competes with the
+       headline. `aria-hidden` + `pointer-events-none` keep it purely
+       decorative: invisible to screen readers, unclickable by mice.
+       The mask is inline because the percentages are one-off; nothing else on
+       the site reuses this exact geometry. */}
   <div
     aria-hidden="true"
     class="pointer-events-none absolute inset-0 opacity-[0.55]"

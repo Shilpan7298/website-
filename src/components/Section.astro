@@ -1,4 +1,12 @@
 ---
+/**
+ * A full-width band: background tone + vertical rhythm + inner Container.
+ *
+ * Alternating `default` and `muted` tones is what separates sections without
+ * needing divider lines. `dark` inverts to navy — pass `tone="dark"` to any
+ * child that takes a tone (SectionHeader, FeatureCard) so text contrast
+ * follows, since those cannot detect their own background.
+ */
 import Container from './Container.astro';
 
 interface Props {

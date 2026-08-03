@@ -1,4 +1,11 @@
 ---
+/**
+ * Horizontal gutter + max-width wrapper. The single source of page margin —
+ * if the site's edge spacing ever changes, it changes here and nowhere else.
+ *
+ * The padding scale (20px → 24px → 32px) is what guarantees content never
+ * touches the screen edge on a 375px phone.
+ */
 interface Props {
   class?: string;
   /** `narrow` for long-form prose, `wide` for grids and tables. */

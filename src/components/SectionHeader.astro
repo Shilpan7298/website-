@@ -1,4 +1,16 @@
 ---
+/**
+ * Eyebrow + heading + lead paragraph, the standard opener for a section.
+ *
+ * Always renders an <h2>. Every page has exactly one <h1> (in PageHeader or
+ * Hero), so section openers must sit a level below it — using this component
+ * everywhere is what keeps the heading outline valid without anyone having to
+ * think about it.
+ *
+ * Capped at max-w-2xl regardless of the container width: a lead paragraph
+ * running the full width of a 1440px screen is far past the ~75-character
+ * measure that stays comfortable to read.
+ */
 import Reveal from './Reveal.astro';
 
 interface Props {
@@ -6,6 +18,7 @@ interface Props {
   title: string;
   lead?: string;
   align?: 'left' | 'center';
+  /** `dark` for navy sections — lightens the eyebrow and body for contrast. */
   tone?: 'light' | 'dark';
   class?: string;
 }
@@ -25,6 +38,8 @@ const isDark = tone === 'dark';
 <Reveal
   class={`${align === 'center' ? 'mx-auto max-w-2xl text-center' : 'max-w-2xl'} ${className}`}
 >
+  {/* The eyebrow is a <p>, not a heading — it labels the section visually but
+      putting it in the heading outline would create a phantom level. */}
   {
     eyebrow && (
       <p

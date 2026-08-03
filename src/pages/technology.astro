@@ -9,6 +9,18 @@ import Reveal from '../components/Reveal.astro';
 import Icon from '../components/Icon.astro';
 import Button from '../components/Button.astro';
 
+/**
+ * Technology page — chemistry, control and safety.
+ *
+ * The sodium-ion section is worded carefully: prototype-stage R&D, explicitly
+ * NOT in a shipping Pod. Keep that distinction if you edit the copy; claiming
+ * a sodium-ion product that does not exist yet would be a real problem in a
+ * tender response.
+ *
+ * ChemistryTable's figures are general cell-level characteristics of each
+ * chemistry, not Urjapod measurements — the component carries its own
+ * footnote saying so.
+ */
 const bmsCapabilities = [
   {
     title: 'Cell-level visibility',
@@ -62,7 +74,7 @@ const safetyLayers = [
     lead="A grid battery is judged on three things: whether it is safe, how long it lasts, and whether it does what the dispatch signal asked. Every choice below serves one of those."
   />
 
-  <!-- Chemistry -->
+  {/* Chemistry */}
   <Section width="wide">
     <SectionHeader
       eyebrow="Chemistry"
@@ -75,7 +87,7 @@ const safetyLayers = [
     </Reveal>
   </Section>
 
-  <!-- Sodium-ion -->
+  {/* Sodium-ion */}
   <Section tone="dark" width="wide">
     <div class="grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
       <Reveal>
@@ -141,7 +153,7 @@ const safetyLayers = [
     </div>
   </Section>
 
-  <!-- BMS -->
+  {/* BMS */}
   <Section width="wide">
     <div class="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
       <Reveal>
@@ -181,7 +193,7 @@ const safetyLayers = [
     </div>
   </Section>
 
-  <!-- Safety -->
+  {/* Safety */}
   <Section tone="muted" width="wide">
     <SectionHeader
       eyebrow="Safety"

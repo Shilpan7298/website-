@@ -8,6 +8,17 @@ import Reveal from '../components/Reveal.astro';
 import Icon from '../components/Icon.astro';
 import type { IconName } from '../components/icons';
 
+/**
+ * Solutions page — four application deep-dives plus the services offering.
+ *
+ * Each solution's `id` is used three ways: the anchor target on the section,
+ * the href in the quick-jump nav, and the React-style key. Changing an id
+ * breaks any external link pointing at e.g. /solutions/#solar, so treat them
+ * as a public URL contract.
+ *
+ * Sections alternate default/muted tone by index, so adding or removing one
+ * re-stripes the whole page automatically.
+ */
 interface Solution {
   id: string;
   icon: IconName;
@@ -110,7 +121,7 @@ const services = [
     lead="A battery for evening tariff arbitrage and a battery for frequency regulation are sized, configured and operated differently. We start from the case you are building, not from the box we sell."
   />
 
-  <!-- Quick jump -->
+  {/* Quick jump */}
   <div class="border-b border-ink-200 bg-ink-100">
     <nav
       aria-label="Solutions"
@@ -130,7 +141,7 @@ const services = [
     </nav>
   </div>
 
-  <!-- Deep dives -->
+  {/* Deep dives */}
   {
     solutions.map((s, i) => (
       <Section
@@ -182,7 +193,7 @@ const services = [
     ))
   }
 
-  <!-- Services -->
+  {/* Services */}
   <Section tone="dark" width="wide">
     <SectionHeader
       eyebrow="Services"

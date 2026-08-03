@@ -10,6 +10,14 @@ import Reveal from '../components/Reveal.astro';
 import Icon from '../components/Icon.astro';
 import { podGen1, showProvisionalMarkers } from '../data/site';
 
+/**
+ * Pod Gen 1 product page.
+ *
+ * The spec table renders straight from `podGen1.specs` in src/data/site.ts,
+ * including the "Provisional" badges. Do not hardcode a spec into this page —
+ * the badge logic and the count in the footnote both derive from that array,
+ * so a hardcoded value would silently escape the provisional accounting.
+ */
 const subsystems = [
   {
     icon: 'battery',
@@ -56,7 +64,7 @@ const provisional = podGen1.specs.filter((s) => !s.verified).length;
     lead={podGen1.summary}
   />
 
-  <!-- Visual + headline specs -->
+  {/* Visual + headline specs */}
   <Section width="wide">
     <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
       <Reveal class="rounded-hero border border-ink-200 bg-white p-8 shadow-soft-lg">
@@ -98,7 +106,7 @@ const provisional = podGen1.specs.filter((s) => !s.verified).length;
     </div>
   </Section>
 
-  <!-- Full specification -->
+  {/* Full specification */}
   <Section tone="muted" width="wide">
     <SectionHeader
       eyebrow="Specification"
@@ -149,7 +157,7 @@ const provisional = podGen1.specs.filter((s) => !s.verified).length;
     }
   </Section>
 
-  <!-- Subsystems -->
+  {/* Subsystems */}
   <Section width="wide">
     <SectionHeader
       eyebrow="Inside the pod"

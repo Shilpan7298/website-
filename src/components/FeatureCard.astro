@@ -1,4 +1,15 @@
 ---
+/**
+ * Icon + title + body card, optionally a link.
+ *
+ * Renders as <li>, so callers must place it inside a <ul>/<ol>. A grid of
+ * cards is semantically a list, and marking it up as one lets a screen reader
+ * announce "list, 4 items" instead of reading four unrelated divs.
+ *
+ * `flex-1` on the body plus `h-full` on the wrapper makes every card in a row
+ * match the tallest one, so the "Learn more" links align across the grid even
+ * when body copy is uneven.
+ */
 import Icon from './Icon.astro';
 import Reveal from './Reveal.astro';
 import type { IconName } from './icons';
