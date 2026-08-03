@@ -1,0 +1,143 @@
+---
+/**
+ * Blog post page.
+ *
+ * One route per Markdown file in src/content/blog/. Carries BlogPosting
+ * structured data — headline, dates, author and publisher — which is what
+ * makes a post eligible for article treatment in search results.
+ */
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/Container.astro';
+import Prose from '../../components/Prose.astro';
+import Reveal from '../../components/Reveal.astro';
+import Icon from '../../components/Icon.astro';
+import CTASection from '../../components/CTASection.astro';
+import { siteUrl, company } from '../../data/site';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
+// Rough reading time. 200 wpm is the usual approximation for prose.
+const words = post.body?.split(/\s+/).length ?? 0;
+const readingMinutes = Math.max(1, Math.round(words / 200));
+
+const url = `${siteUrl}/blog/${post.id}/`;
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  '@id': `${url}#article`,
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(),
+  author: { '@type': 'Organization', name: post.data.author },
+  publisher: { '@id': `${siteUrl}/#organization` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  image: `${siteUrl}/og.png`,
+  wordCount: words,
+  keywords: post.data.tags.join(', '),
+  inLanguage: 'en',
+};
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  breadcrumbs={[
+    { label: 'Blog', href: '/blog/' },
+    { label: post.data.title, href: `/blog/${post.id}/` },
+  ]}
+  schema={articleSchema}
+  ogType="article"
+>
+  <article>
+    {/* Post header */}
+    <div class="border-b border-ink-200 bg-white">
+      <Container width="narrow">
+        <div class="py-14 sm:py-16">
+          <a
+            href="/blog/"
+            class="group inline-flex items-center gap-2 text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700"
+          >
+            <Icon
+              name="arrowLeft"
+              class="size-4 transition-transform duration-200 group-hover:-translate-x-0.5"
+            />
+            All posts
+          </a>
+
+          <div class="mt-6 flex flex-wrap items-center gap-2">
+            {
+              post.data.tags.map((tag) => (
+                <span class="rounded-full bg-brand-50 px-2.5 py-1 text-[0.6875rem] font-bold tracking-wide text-brand-700 uppercase">
+                  {tag}
+                </span>
+              ))
+            }
+          </div>
+
+          <h1 class="mt-4 text-[2.15rem] leading-[1.12] sm:text-[2.75rem]">
+            {post.data.title}
+          </h1>
+
+          <p class="mt-5 text-lg leading-relaxed text-ink-600">
+            {post.data.description}
+          </p>
+
+          <div
+            class="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-ink-200 pt-6 text-sm text-ink-600"
+          >
+            <span class="flex items-center gap-2">
+              <Icon name="calendar" class="size-4 text-brand-600" />
+              <time datetime={post.data.pubDate.toISOString()}>
+                {fmt(post.data.pubDate)}
+              </time>
+            </span>
+            <span class="flex items-center gap-2">
+              <Icon name="clock" class="size-4 text-brand-600" />
+              {readingMinutes} min read
+            </span>
+            <span class="font-semibold text-ink-700">{post.data.author}</span>
+          </div>
+        </div>
+      </Container>
+    </div>
+
+    {/* Post body */}
+    <Container width="narrow">
+      <Reveal class="py-14 sm:py-16">
+        <Prose>
+          <Content />
+        </Prose>
+      </Reveal>
+    </Container>
+  </article>
+
+  <CTASection
+    title="Working on a storage project?"
+    lead={`Send us the plant capacity, the duty cycle you need to meet and a target date. We will come back with an indicative configuration.`}
+    secondaryLabel="See Pod Gen 1"
+    secondaryHref="/product/"
+  />
+</BaseLayout>

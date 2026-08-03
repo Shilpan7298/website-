@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 260" width="620" height="260" fill="none" role="img" aria-label="Urjapod Energy">
+  <title>Urjapod Energy</title>
+  <rect x="8" y="24" width="568" height="212" rx="46" fill="#2b4c9b"/>
+  <rect x="584" y="94" width="26" height="72" rx="13" fill="#2b4c9b"/>
+  <path d="M52 62 V148 A52 52 0 0 0 156 148 V62 H122 V148 A18 18 0 0 1 86 148 V62 Z" fill="#ffffff" fill-rule="evenodd"/>
+  <path d="M148 54 L106 128 H132 L120 194 L170 118 H142 Z" fill="#f5a623"/>
+  <text x="216" y="126" fill="#ffffff" font-family="'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif" font-size="76" font-weight="800" font-style="italic" letter-spacing="-2">Urjapod</text>
+  <text x="216" y="208" fill="#ffffff" font-family="'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif" font-size="76" font-weight="800" font-style="italic" letter-spacing="-2">Energy</text>
+</svg>

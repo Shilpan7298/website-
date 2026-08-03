@@ -2,10 +2,9 @@
 
 /* ---------------------------------------------------------------------------
    Fonts
-   Plus Jakarta Sans (variable, latin subset only) is self-hosted from
-   node_modules/@fontsource-variable/plus-jakarta-sans/files/ and copied to
+   Plus Jakarta Sans (variable, latin subset) is self-hosted from
    public/fonts/. Self-hosting avoids a third-party DNS + TLS handshake on
-   first paint; the latin-only subset keeps it to ~27 KB for the whole site.
+   first paint; the latin-only subset is ~27 KB for every weight on the site.
 --------------------------------------------------------------------------- */
 @font-face {
   font-family: "Plus Jakarta Sans";
@@ -19,57 +18,77 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Design tokens — "Soft UI Evolution", light enterprise navy.
-   Generated from design-system/urjapod-energy/MASTER.md. Change values here,
-   never hardcode a hex in a component.
+   Brand tokens — sampled from the Urjapod Energy logo.
+
+   The logo is a blue battery holding a white "U", an amber lightning bolt and
+   a white wordmark. That gives the palette exactly three ingredients:
+
+     brand  #2B4C9B  the battery blue     — primary, headings, buttons
+     volt   #F5A623  the lightning bolt   — accent, energy, highlights
+     white                                — the mark and wordmark
+
+   CONTRAST RULES, measured not guessed:
+     brand-600 on white ....... 8.0:1  safe for text and buttons
+     white on brand-600 ....... 8.0:1  safe for button labels
+     volt-500 on white ........ 2.0:1  FAILS — never use volt for text on
+                                       light. Use it as a fill, a rule, an
+                                       icon, or a background behind dark text.
+     ink-950 on volt-500 ...... 8.8:1  safe — dark text on an amber chip
+     volt-400 on brand-950 .... 8.8:1  safe — amber text on deep navy only
 --------------------------------------------------------------------------- */
 @theme {
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, sans-serif;
 
-  /* Ink — navy-tinted neutral ramp. Body copy lives at 600/700. */
-  --color-ink-50: #f8fafc;
-  --color-ink-100: #eef2f7;
-  --color-ink-200: #e2e8f0;
-  --color-ink-300: #cbd5e1;
-  --color-ink-400: #94a3b8;
-  --color-ink-500: #64748b;
-  --color-ink-600: #475569;
-  --color-ink-700: #334155;
-  --color-ink-800: #1e293b;
-  --color-ink-900: #0f172a;
-  --color-ink-950: #020617;
+  /* Brand blue, from the logo's battery body. */
+  --color-brand-50: #eef2fb;
+  --color-brand-100: #dbe3f6;
+  --color-brand-200: #bcccee;
+  --color-brand-300: #93ace1;
+  --color-brand-400: #6484d0;
+  --color-brand-500: #4163bd;
+  --color-brand-600: #2b4c9b; /* the logo blue */
+  --color-brand-700: #243f80;
+  --color-brand-800: #1e3467;
+  --color-brand-900: #182a53;
+  --color-brand-950: #0e1930;
 
-  /* Accent — CTA blue. 600 is the only accent used for text/buttons:
-     5.93:1 on white, passes WCAG AA for normal text and for white-on-accent. */
-  --color-accent-50: #f0f9ff;
-  --color-accent-100: #e0f2fe;
-  --color-accent-200: #bae6fd;
-  --color-accent-300: #7dd3fc;
-  --color-accent-400: #38bdf8;
-  --color-accent-500: #0ea5e9;
-  --color-accent-600: #0369a1;
-  --color-accent-700: #075985;
-  --color-accent-800: #0c4a6e;
+  /* Volt amber, from the logo's lightning bolt. Accent only — see rules. */
+  --color-volt-50: #fff8ec;
+  --color-volt-100: #ffeecd;
+  --color-volt-200: #fedb9a;
+  --color-volt-300: #fcc264;
+  --color-volt-400: #f9ae3d;
+  --color-volt-500: #f5a623; /* the logo amber */
+  --color-volt-600: #d9840c;
+  --color-volt-700: #8a5a06; /* darkened so amber-toned TEXT can pass AA */
 
-  /* Energy — green-energy signal. Used sparingly: live indicators, gains. */
-  --color-energy-50: #ecfdf5;
-  --color-energy-100: #d1fae5;
-  --color-energy-500: #10b981;
-  --color-energy-600: #059669;
-  --color-energy-700: #047857;
+  /* Neutrals, tinted very slightly blue so they sit with the brand. */
+  --color-ink-50: #f7f9fc;
+  --color-ink-100: #eef1f7;
+  --color-ink-200: #dfe4ee;
+  --color-ink-300: #c6cede;
+  --color-ink-400: #8f9bb3;
+  --color-ink-500: #6b7894;
+  --color-ink-600: #4e5a75;
+  --color-ink-700: #3a4459;
+  --color-ink-800: #2a3146;
+  --color-ink-900: #1b2133;
+  --color-ink-950: #0e1320;
 
-  --color-danger: #dc2626;
+  --color-danger: #d92d20;
+  --color-success: #0f9d58;
 
-  --radius-card: 0.75rem;
-  --radius-panel: 1rem;
-  --radius-hero: 1.5rem;
+  --radius-card: 0.875rem;
+  --radius-panel: 1.125rem;
+  --radius-hero: 1.75rem;
 
-  /* Softer than flat, clearer than neumorphism — layered, low-opacity navy. */
-  --shadow-soft-sm: 0 1px 2px rgb(2 6 23 / 0.05);
-  --shadow-soft-md: 0 1px 2px rgb(2 6 23 / 0.04), 0 4px 12px rgb(2 6 23 / 0.06);
-  --shadow-soft-lg: 0 1px 3px rgb(2 6 23 / 0.05), 0 12px 28px rgb(2 6 23 / 0.08);
-  --shadow-soft-xl: 0 2px 4px rgb(2 6 23 / 0.05), 0 24px 48px rgb(2 6 23 / 0.12);
+  /* Shadows carry a blue tint rather than neutral grey, so cards feel part of
+     the brand instead of floating on a generic grey page. */
+  --shadow-brand-sm: 0 1px 2px rgb(14 25 48 / 0.06);
+  --shadow-brand-md: 0 1px 2px rgb(14 25 48 / 0.04), 0 4px 14px rgb(14 25 48 / 0.07);
+  --shadow-brand-lg: 0 1px 3px rgb(14 25 48 / 0.05), 0 14px 32px rgb(14 25 48 / 0.09);
+  --shadow-brand-xl: 0 2px 4px rgb(14 25 48 / 0.05), 0 28px 56px rgb(14 25 48 / 0.13);
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -86,7 +105,7 @@
 
   body {
     background-color: var(--color-ink-50);
-    color: var(--color-ink-800);
+    color: var(--color-ink-700);
     font-family: var(--font-sans);
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
@@ -97,9 +116,9 @@
   h2,
   h3,
   h4 {
-    color: var(--color-ink-950);
-    font-weight: 700;
-    letter-spacing: -0.022em;
+    color: var(--color-brand-950);
+    font-weight: 800;
+    letter-spacing: -0.025em;
     text-wrap: balance;
   }
 
@@ -109,14 +128,14 @@
 
   /* Never remove the focus ring — replace it with a better one. */
   :focus-visible {
-    outline: 2px solid var(--color-accent-600);
+    outline: 2px solid var(--color-brand-600);
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: 3px;
   }
 
   ::selection {
-    background-color: var(--color-accent-200);
-    color: var(--color-ink-950);
+    background-color: var(--color-volt-200);
+    color: var(--color-brand-950);
   }
 
   /* Reserve intrinsic space so media never shifts layout (CLS). */
@@ -130,9 +149,9 @@
 
 /* ---------------------------------------------------------------------------
    Scroll reveal
-   CSS-only, driven by a 30-line IntersectionObserver in BaseLayout. Chosen
-   over GSAP deliberately: GSAP would add ~70 KB gzipped of JS to a site whose
-   headline requirement is that it loads fast. Same staggered feel, no runtime.
+   CSS-only, driven by one shared IntersectionObserver in BaseLayout. Chosen
+   over an animation library deliberately: GSAP would add ~70 KB gzipped to a
+   site whose headline requirement is that it loads fast.
 --------------------------------------------------------------------------- */
 @layer components {
   .reveal {
@@ -154,9 +173,21 @@
     opacity: 1;
     transform: none;
   }
+
+  /* The bolt underline — a volt-coloured swash under a key phrase. Amber is
+     used as a graphic here, never as text colour, so contrast is unaffected. */
+  .underline-volt {
+    background-image: linear-gradient(
+      to top,
+      var(--color-volt-300) 0.28em,
+      transparent 0.28em
+    );
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
 }
 
-/* Honour the OS-level motion preference everywhere, including reveals. */
+/* Honour the OS-level motion preference everywhere. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

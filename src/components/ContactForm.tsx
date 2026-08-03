@@ -118,7 +118,7 @@ export default function ContactForm() {
     return (
       <div
         role="status"
-        className="rounded-panel border border-energy-500/40 bg-energy-50 p-8"
+        className="rounded-panel border border-brand-500/40 bg-brand-50 p-8"
       >
         <h3 className="text-xl font-bold text-ink-950">Thank you — message sent.</h3>
         <p className="mt-2.5 leading-relaxed text-ink-700">
@@ -136,10 +136,10 @@ export default function ContactForm() {
   const fieldClass = (hasError: boolean) =>
     [
       'w-full rounded-lg border bg-white px-4 py-3 text-base text-ink-900 transition-colors duration-200',
-      'placeholder:text-ink-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600/30',
+      'placeholder:text-ink-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600/30',
       hasError
         ? 'border-[color:var(--color-danger)] focus-visible:border-[color:var(--color-danger)]'
-        : 'border-ink-300 focus-visible:border-accent-600',
+        : 'border-ink-300 focus-visible:border-brand-600',
     ].join(' ');
 
   const labelClass = 'mb-2 block text-sm font-semibold text-ink-800';
@@ -268,7 +268,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="inline-flex h-13 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-accent-600 px-7 font-semibold text-white shadow-soft-sm transition-all duration-200 hover:bg-accent-700 hover:shadow-soft-md disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+        className="inline-flex h-13 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-brand-600 px-7 font-semibold text-white shadow-brand-sm transition-all duration-200 hover:bg-brand-700 hover:shadow-brand-md disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
         {status === 'submitting' ? 'Sending…' : 'Send enquiry'}
       </button>

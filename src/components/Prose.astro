@@ -1,0 +1,39 @@
+---
+/**
+ * Long-form text wrapper for blog posts and policy pages.
+ *
+ * Tailwind's typography plugin is not installed — one wrapper with descendant
+ * selectors covers the handful of prose pages here and avoids a dependency
+ * (and ~30 KB of generated CSS) for it.
+ *
+ * Line length is capped by the `narrow` Container the pages use, which keeps
+ * the measure around 70 characters.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div
+  class={`
+    text-[1.0625rem] leading-relaxed text-ink-700
+    [&_h2]:mt-12 [&_h2]:mb-4 [&_h2]:text-2xl [&_h2]:text-brand-950
+    [&_h3]:mt-9 [&_h3]:mb-3 [&_h3]:text-lg [&_h3]:text-brand-950
+    [&_p]:mt-5
+    [&_ul]:mt-5 [&_ul]:space-y-2.5 [&_ul]:pl-5
+    [&_ol]:mt-5 [&_ol]:space-y-2.5 [&_ol]:pl-5
+    [&_li]:list-disc [&_li]:marker:text-volt-500
+    [&_ol>li]:list-decimal [&_ol>li]:marker:text-ink-400
+    [&_a]:font-semibold [&_a]:text-brand-600 [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-brand-700
+    [&_strong]:font-bold [&_strong]:text-brand-950
+    [&_code]:rounded [&_code]:bg-ink-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[0.9em]
+    [&_blockquote]:mt-6 [&_blockquote]:border-l-4 [&_blockquote]:border-volt-500 [&_blockquote]:pl-5 [&_blockquote]:text-ink-600 [&_blockquote]:italic
+    [&_hr]:my-10 [&_hr]:border-ink-200
+    [&_h2:first-child]:mt-0 [&_p:first-child]:mt-0
+    ${className}
+  `}
+>
+  <slot />
+</div>

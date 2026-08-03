@@ -1,97 +1,88 @@
 ---
+/**
+ * Home page.
+ *
+ * Mirrors the live site's messaging and order: the positioning line, the
+ * three areas of work, the product, sodium-ion, and the company ambition.
+ *
+ * Page-local content lives here; anything appearing in more than one place,
+ * or needing an audit, lives in src/data/site.ts.
+ */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/Section.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import Hero from '../components/Hero.astro';
-import CapabilityBento from '../components/CapabilityBento.astro';
 import FeatureCard from '../components/FeatureCard.astro';
 import CTASection from '../components/CTASection.astro';
 import Reveal from '../components/Reveal.astro';
 import Icon from '../components/Icon.astro';
 import Button from '../components/Button.astro';
 import PodVisual from '../components/PodVisual.astro';
-import { podGen1, showProvisionalMarkers } from '../data/site';
+import { pillars, vision, podGen1, sodiumIon } from '../data/site';
 
-const applications = [
-  {
-    icon: 'sun',
-    title: 'Solar firming and shifting',
-    body: 'Absorb the midday peak and release it into the evening ramp, so a solar plant sells power in the hours it is actually worth something.',
-  },
-  {
-    icon: 'wind',
-    title: 'Wind smoothing',
-    body: 'Buffer the minute-to-minute variability of a wind farm and hold output inside the schedule the grid code requires.',
-  },
-  {
-    icon: 'grid',
-    title: 'Grid ancillary services',
-    body: 'Frequency regulation, reserve capacity and voltage support — the fast-response services a battery provides better than any thermal plant.',
-  },
-  {
-    icon: 'factory',
-    title: 'C&I peak shaving',
-    body: 'Cut demand charges and ride through outages at industrial and commercial sites, without running a diesel set.',
-  },
-] as const;
-
-const process = [
-  {
-    step: '01',
-    title: 'Design and feasibility',
-    body: 'We start from your generation profile, tariff structure and grid connection terms, then size the system against the duty cycle you actually need to serve.',
-  },
-  {
-    step: '02',
-    title: 'Build and commission',
-    body: 'Supply, civil works, installation, integration with your inverters and SCADA, and the testing needed to energise and hand over.',
-  },
-  {
-    step: '03',
-    title: 'Operate and maintain',
-    body: 'Remote monitoring, scheduled servicing, capacity testing and warranty administration across the life of the asset.',
-  },
-] as const;
-
-// Show the specs that are load-bearing on the home page; the full table
-// lives on the product page.
 const headlineSpecs = podGen1.specs.slice(0, 6);
+
+/**
+ * FAQ schema. These are questions people genuinely search for around grid
+ * storage, answered in the page's own words — which is what makes the markup
+ * eligible for a rich result rather than spam. The visible FAQ section below
+ * renders the same text; Google penalises schema with no on-page counterpart,
+ * so the two must stay in sync.
+ */
+const faqs = [
+  {
+    q: 'What is a battery energy storage system (BESS)?',
+    a: 'A BESS stores electricity so it can be delivered when it is needed rather than only when it is generated. For a solar or wind plant that means capturing output at times of surplus and releasing it into the evening peak, or holding generation steady enough to meet a committed schedule.',
+  },
+  {
+    q: 'Why does a renewable power plant need storage?',
+    a: 'Solar produces at midday and wind produces intermittently, while demand peaks in the evening and the grid needs stability every second in between. Storage closes that gap, reduces losses and improves the realisations from a renewable asset.',
+  },
+  {
+    q: 'What is Pod Gen 1?',
+    a: 'Pod Gen 1 is Urjapod’s modular, container-sized battery for grid-scale energy storage. It is built from high-quality prismatic LFP cells, driven by an AI-enabled battery management system, and housed in a standard 20 ft container.',
+  },
+  {
+    q: 'Does Urjapod work on sodium-ion batteries?',
+    a: 'Yes. Urjapod is building India’s first prototype batteries with prismatic sodium-ion cells — an upcoming chemistry that is inherently safer, longer lived, tolerant of a wider temperature range and lower in cost.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
 ---
 
 <BaseLayout
-  title="Urjapod Energy — Grid-Scale Battery Energy Storage"
-  description="Urjapod Energy designs and builds containerised battery energy storage systems (BESS) for solar, wind and hybrid power plants in India — from concept and design through commissioning and O&M."
+  title="Urjapod Energy — Grid-Scale Battery Energy Storage, India"
+  description="Urjapod Energy builds battery energy storage systems (BESS) for solar, wind and hybrid power plants across India — your partner for 100% green energy, from concept to commissioning."
   bareTitle
+  schema={faqSchema}
 >
   <Hero />
 
-  <!-- Capability bento -->
-  <Section tone="muted" width="wide">
+  {/* The three stated areas of work, carried over from the live site. This is
+      Urjapod's own framing of the business, so it leads. */}
+  <Section width="wide">
     <SectionHeader
       eyebrow="What we do"
-      title="Storage is what makes renewable power dispatchable."
-      lead="A solar plant produces when the sun is up, not when demand peaks. Storage closes that gap — and closing it well takes a partner who owns the whole scope, not just the box."
+      title="Energy storage is critical to the further adoption of renewable energy."
+      lead="We provide high-tech, reliable and cost-effective battery energy storage solutions — across the whole life of a project."
       class="mb-12"
     />
-    <CapabilityBento />
-  </Section>
-
-  <!-- Applications -->
-  <Section id="applications" width="wide">
-    <SectionHeader
-      eyebrow="Applications"
-      title="Where a battery earns its keep."
-      lead="The same hardware serves very different business cases. We size and configure it for the one you are actually building."
-      class="mb-12"
-    />
-    <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <ul class="grid gap-5 md:grid-cols-3">
       {
-        applications.map((app, i) => (
+        pillars.map((pillar, i) => (
           <FeatureCard
-            icon={app.icon}
-            title={app.title}
-            body={app.body}
-            href="/solutions/"
+            icon={pillar.icon}
+            title={pillar.title}
+            body={pillar.body}
             index={i}
           />
         ))
@@ -99,47 +90,51 @@ const headlineSpecs = podGen1.specs.slice(0, 6);
     </ul>
   </Section>
 
-  <!-- Pod Gen 1 -->
+  {/* Product */}
   <Section tone="muted" width="wide">
     <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
       <Reveal>
-        <p class="text-xs font-bold tracking-[0.14em] text-accent-600 uppercase">
+        <p class="text-xs font-bold tracking-[0.14em] text-brand-600 uppercase">
           The product
         </p>
         <h2 class="mt-3 text-3xl leading-tight sm:text-4xl lg:text-[2.75rem]">
           Pod Gen 1
         </h2>
         <p class="mt-4 text-lg leading-relaxed text-ink-600">
-          {podGen1.summary} High energy density, inbuilt safety protection, and
-          an enclosure rated against dust and water — built to global
-          environmental standards and shipped as a single drop-in unit.
+          {podGen1.summary}
         </p>
 
-        <dl class="mt-9 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-ink-200 pt-8">
+        <ul class="mt-7 grid gap-3 sm:grid-cols-2">
+          {
+            podGen1.features.map((f) => (
+              <li class="flex items-start gap-2.5 text-[0.9375rem] font-medium text-ink-700">
+                <Icon
+                  name="check"
+                  class="mt-0.5 size-5 shrink-0 text-brand-600"
+                />
+                {f}
+              </li>
+            ))
+          }
+        </ul>
+
+        <dl
+          class="mt-9 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-ink-200 pt-8"
+        >
           {
             headlineSpecs.map((spec) => (
               <div>
                 <dt class="text-xs font-semibold tracking-wide text-ink-600 uppercase">
                   {spec.label}
                 </dt>
-                <dd class="mt-1 font-semibold text-ink-950">{spec.value}</dd>
+                <dd class="mt-1 font-bold text-brand-950">{spec.value}</dd>
               </div>
             ))
           }
         </dl>
 
-        {
-          showProvisionalMarkers &&
-            headlineSpecs.some((s) => !s.verified) && (
-              <p class="mt-5 text-sm text-ink-600">
-                Some figures are provisional pending final test data — see the
-                full specification.
-              </p>
-            )
-        }
-
         <div class="mt-9">
-          <Button href="/products/" size="lg" icon="right">
+          <Button href="/product/" size="lg" icon="right">
             Full specification
           </Button>
         </div>
@@ -147,74 +142,80 @@ const headlineSpecs = podGen1.specs.slice(0, 6);
 
       <Reveal
         index={1}
-        class="rounded-hero border border-ink-200 bg-white p-8 shadow-soft-lg"
+        class="rounded-hero border border-ink-200 bg-white p-8 shadow-brand-lg"
       >
         <PodVisual />
       </Reveal>
     </div>
   </Section>
 
-  <!-- Sodium-ion R&D -->
+  {/* Sodium-ion */}
   <Section tone="dark" width="wide">
     <div class="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
       <Reveal>
         <span
-          class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white"
+          class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold text-white"
         >
-          <Icon name="flask" class="size-4 text-accent-300" />
-          Research and development
+          <Icon name="flask" class="size-4 text-volt-400" />
+          {sodiumIon.status}
         </span>
         <h2 class="mt-6 text-3xl leading-tight text-white sm:text-4xl">
-          India's first prototype batteries with prismatic sodium-ion cells.
+          {sodiumIon.headline}
         </h2>
       </Reveal>
 
       <Reveal index={1}>
-        <p class="text-lg leading-relaxed text-ink-400">
-          Sodium-ion is the chemistry energy storage has been waiting for. It
-          uses no lithium, no cobalt and no nickel — which takes the raw
-          material volatility out of the cost curve — and it is inherently
-          safer, lasts longer and works across a wider temperature range than
-          the lithium chemistries in use today.
+        <p class="text-lg leading-relaxed text-ink-300">
+          {sodiumIon.summary}
         </p>
-        <p class="mt-5 text-lg leading-relaxed text-ink-400">
-          We are building the first prismatic sodium-ion prototype cells in
-          India, so the next generation of Pod is not dependent on an imported
-          supply chain.
+        <p class="mt-5 text-lg leading-relaxed text-ink-300">
+          It needs no lithium, no cobalt and no nickel — which takes
+          critical-mineral volatility out of the cost curve, and means the next
+          generation of Pod need not depend on an imported supply chain.
         </p>
         <div class="mt-8">
-          <Button href="/technology/" size="lg" variant="onDark" icon="right">
-            Read about the technology
+          <Button href="/sodium-ion/" size="lg" variant="onDark" icon="right">
+            Read about sodium-ion
           </Button>
         </div>
       </Reveal>
     </div>
   </Section>
 
-  <!-- Process -->
-  <Section width="wide">
-    <SectionHeader
-      eyebrow="How we work"
-      title="From concept to commissioning, and everything after."
-      class="mb-12"
-    />
-    <ol class="grid gap-5 md:grid-cols-3">
+  {/* The company ambition, from the live site. */}
+  <Section tone="muted" width="default" size="sm">
+    <Reveal class="mx-auto max-w-3xl text-center">
+      <p class="text-xs font-bold tracking-[0.14em] text-brand-600 uppercase">
+        Our ambition
+      </p>
+      <p
+        class="mt-5 text-2xl leading-snug font-bold text-brand-950 sm:text-[1.75rem]"
+      >
+        {vision}
+      </p>
+    </Reveal>
+  </Section>
+
+  {/* Visible FAQ matching the FAQPage schema above. */}
+  <Section width="default">
+    <SectionHeader eyebrow="Questions" title="Frequently asked" class="mb-10" />
+    <div class="space-y-3">
       {
-        process.map((item, i) => (
-          <Reveal as="li" index={i} class="h-full">
-            <div class="flex h-full flex-col rounded-panel border border-ink-200 bg-white p-8 shadow-soft-sm">
-              <span class="font-mono text-sm font-bold text-accent-600">
-                {item.step}
-              </span>
-              <h3 class="mt-4 text-xl text-ink-950">{item.title}</h3>
-              <p class="mt-3 text-[0.9375rem] leading-relaxed text-ink-600">
-                {item.body}
-              </p>
-            </div>
+        faqs.map((faq, i) => (
+          <Reveal index={i}>
+            <details class="group rounded-panel border border-ink-200 bg-white px-6 shadow-brand-sm">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left font-bold text-brand-950 [&::-webkit-details-marker]:hidden">
+                {faq.q}
+                <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600 transition-transform duration-200 group-open:rotate-45">
+                  <Icon name="plus" class="size-4" />
+                </span>
+              </summary>
+              <p class="pb-5 leading-relaxed text-ink-600">{faq.a}</p>
+            </details>
           </Reveal>
         ))
       }
-    </ol>
+    </div>
   </Section>
 
   <CTASection />

@@ -5,14 +5,34 @@ import Section from '../components/Section.astro';
 import Reveal from '../components/Reveal.astro';
 import Icon from '../components/Icon.astro';
 import ContactForm from '../components/ContactForm';
-import { company } from '../data/site';
+import { company, siteUrl } from '../data/site';
 
+/**
+ * Contact page — the only page on the site that ships React.
+ *
+ * The direct-contact card beside the form is deliberate redundancy: it is
+ * plain HTML, so email, phone and address stay reachable even if the form's
+ * JavaScript fails to load or is blocked. Never remove it in favour of
+ * "just use the form".
+ */
 const { address } = company;
+
+/** ContactPage + the full NAP, which is what local search results key off. */
+const contactSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  '@id': `${siteUrl}/contact/#contactpage`,
+  url: `${siteUrl}/contact/`,
+  name: `Contact ${company.name}`,
+  about: { '@id': `${siteUrl}/#organization` },
+};
 ---
 
 <BaseLayout
   title="Contact"
   description="Talk to Urjapod Energy about battery energy storage for your solar, wind or hybrid power plant. Based in Navrangpura, Ahmedabad, Gujarat."
+  breadcrumbs={[{ label: 'Contact', href: '/contact/' }]}
+  schema={contactSchema}
 >
   <PageHeader
     eyebrow="Contact"
@@ -35,13 +55,13 @@ const { address } = company;
       </Reveal>
 
       <Reveal index={1}>
-        <div class="rounded-panel border border-ink-200 bg-white p-8 shadow-soft-sm">
+        <div class="rounded-panel border border-ink-200 bg-white p-8 shadow-brand-sm">
           <h2 class="text-xl">Reach us directly</h2>
 
           <ul class="mt-7 space-y-6">
             <li class="flex gap-4">
               <span
-                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent-50 text-accent-600"
+                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600"
               >
                 <Icon name="mail" class="size-5" />
               </span>
@@ -51,7 +71,7 @@ const { address } = company;
                 </p>
                 <a
                   href={`mailto:${company.email}`}
-                  class="mt-1 block font-semibold text-ink-900 transition-colors hover:text-accent-600"
+                  class="mt-1 block font-semibold text-ink-900 transition-colors hover:text-brand-600"
                 >
                   {company.email}
                 </a>
@@ -60,7 +80,7 @@ const { address } = company;
 
             <li class="flex gap-4">
               <span
-                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent-50 text-accent-600"
+                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600"
               >
                 <Icon name="phone" class="size-5" />
               </span>
@@ -70,7 +90,7 @@ const { address } = company;
                 </p>
                 <a
                   href={`tel:${company.phoneHref}`}
-                  class="mt-1 block font-semibold text-ink-900 transition-colors hover:text-accent-600"
+                  class="mt-1 block font-semibold text-ink-900 transition-colors hover:text-brand-600"
                 >
                   {company.phone}
                 </a>
@@ -79,7 +99,7 @@ const { address } = company;
 
             <li class="flex gap-4">
               <span
-                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent-50 text-accent-600"
+                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600"
               >
                 <Icon name="mapPin" class="size-5" />
               </span>
@@ -98,7 +118,7 @@ const { address } = company;
 
             <li class="flex gap-4">
               <span
-                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent-50 text-accent-600"
+                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600"
               >
                 <Icon name="linkedin" class="size-5" />
               </span>
@@ -110,7 +130,7 @@ const { address } = company;
                   href={company.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="mt-1 inline-flex items-center gap-1.5 font-semibold text-ink-900 transition-colors hover:text-accent-600"
+                  class="mt-1 inline-flex items-center gap-1.5 font-semibold text-ink-900 transition-colors hover:text-brand-600"
                 >
                   Urjapod Energy
                   <Icon name="arrowUpRight" class="size-4" />

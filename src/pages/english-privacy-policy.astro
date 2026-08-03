@@ -1,0 +1,180 @@
+---
+/**
+ * Privacy policy.
+ *
+ * URL deliberately matches the original site: /english-privacy-policy. The
+ * "english-" prefix is odd but it is the live URL, so it is preserved rather
+ * than tidied — changing it would break inbound links and search results.
+ *
+ * The original page is an UNEDITED Wix template describing what a privacy
+ * policy should generally contain, rather than what Urjapod does with data.
+ * This page describes THIS build accurately: static, no analytics, no
+ * tracking, no cookies set by us, and a contact form that opens the visitor's
+ * own mail client.
+ *
+ * TODO(confirm): plain-language description of actual data handling, NOT
+ * legal advice, and not reviewed by a lawyer. Have it reviewed before launch —
+ * particularly against India's Digital Personal Data Protection Act, 2023,
+ * and GDPR if you market into the EU.
+ *
+ * TODO(confirm): if you add analytics, a chat widget, embedded maps, or wire
+ * up a contact-form backend, this page MUST be updated — each introduces data
+ * collection that the text below currently says does not happen.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import Prose from '../components/Prose.astro';
+import Reveal from '../components/Reveal.astro';
+import Icon from '../components/Icon.astro';
+import { company } from '../data/site';
+
+const lastUpdated = 'August 2026';
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description="How Urjapod Energy handles personal information collected through this website — what we collect, why, how long we keep it, and how to contact us about it."
+  breadcrumbs={[
+    { label: 'Privacy Policy', href: '/english-privacy-policy/' },
+  ]}
+>
+  <PageHeader
+    eyebrow="Legal"
+    title="Privacy policy"
+    lead="What this website collects, why, and what we do with it. In short: a static site with no tracking, and the only personal information we hold is what you choose to send us."
+  />
+
+  <Section width="narrow">
+    <Reveal>
+      <div
+        class="mb-10 flex gap-3 rounded-panel border border-volt-300 bg-volt-50 p-5"
+      >
+        <Icon name="clock" class="mt-0.5 size-5 shrink-0 text-volt-700" />
+        <p class="text-sm leading-relaxed text-ink-700">
+          <strong class="font-bold text-brand-950">
+            Draft — needs legal review.
+          </strong>
+          This describes how the site actually behaves today, but it has not
+          been reviewed by a lawyer and is not legal advice. Have it checked
+          against India's Digital Personal Data Protection Act, 2023 before
+          launch, and update it if you add analytics or a contact-form backend.
+        </p>
+      </div>
+
+      <Prose>
+        <h2>Who we are</h2>
+        <p>
+          This website is operated by <strong>{company.legalName}</strong>
+          (CIN {company.cin}), {company.address.line1},
+          {' '}{company.address.line2}, {company.address.city},
+          {' '}{company.address.state} {company.address.postcode}, India.
+        </p>
+        <p>
+          For any question about this policy or your personal information,
+          contact <a href={`mailto:${company.email}`}>{company.email}</a>.
+        </p>
+
+        <h2>What we collect</h2>
+        <p>
+          <strong>Information you send us.</strong> If you contact us — through
+          the form on our contact page, by email, or by phone — we receive
+          whatever you choose to tell us. Typically that is your name, company,
+          email address, phone number and details of the project you are asking
+          about.
+        </p>
+        <p>
+          <strong>Information collected automatically.</strong> We do not run
+          analytics, advertising or tracking software on this site. We do not
+          set cookies. There are no third-party scripts, externally hosted
+          fonts, trackers or social widgets — every file the site loads is
+          served from our own domain.
+        </p>
+        <p>
+          Our hosting provider may keep standard server logs, which can include
+          IP addresses and browser details, for security and reliability. That
+          is ordinary infrastructure logging, not profiling.
+        </p>
+
+        <h2>How the contact form works</h2>
+        <p>
+          The contact form does not currently send anything to us directly.
+          When you submit it, it opens your own email application with the
+          message prepared, and nothing is sent until you send it yourself.
+          Your enquiry reaches us as an ordinary email, and no form data passes
+          through any third-party service.
+        </p>
+
+        <h2>Why we use it</h2>
+        <p>
+          We use what you send us for one purpose: to reply to your enquiry
+          and, if it leads somewhere, to carry out the resulting business
+          relationship — quoting, designing, supplying, commissioning or
+          maintaining an energy storage system.
+        </p>
+        <p>
+          We do not sell your information, we do not share it for marketing,
+          and we will not add you to a mailing list because you contacted us
+          about a project.
+        </p>
+
+        <h2>Who we share it with</h2>
+        <p>We do not share your personal information, except:</p>
+        <ul>
+          <li>
+            our email provider, which necessarily processes messages sent to
+            us;
+          </li>
+          <li>
+            professional advisers, or where we are required to disclose
+            information by law or by a competent authority.
+          </li>
+        </ul>
+
+        <h2>How long we keep it</h2>
+        <p>
+          Enquiries are kept only as long as there is a reason to: while we are
+          in conversation with you, and afterwards for as long as needed for
+          the resulting contract and our legal and tax obligations. If an
+          enquiry does not lead anywhere, we delete it once it is clearly no
+          longer relevant.
+        </p>
+
+        <h2>Your rights</h2>
+        <p>
+          You can ask us to confirm what personal information we hold about
+          you, to correct it if it is wrong, or to delete it. You can also ask
+          us to stop using it. Email
+          {' '}<a href={`mailto:${company.email}`}>{company.email}</a> and we
+          will respond.
+        </p>
+        <p>
+          Depending on where you live, you may also have the right to complain
+          to a data protection authority.
+        </p>
+
+        <h2>Security</h2>
+        <p>
+          This site is served over HTTPS. We take reasonable measures to
+          protect the information you send us, though no method of transmission
+          over the internet is completely secure.
+        </p>
+
+        <h2>Links to other sites</h2>
+        <p>
+          This site links to external pages, such as our LinkedIn profile and
+          the Bill Analyser. We are not responsible for the privacy practices
+          of sites we do not operate, and we would encourage you to read their
+          policies.
+        </p>
+
+        <h2>Changes to this policy</h2>
+        <p>
+          If we change how this site handles personal information — for example
+          by adding analytics or a form backend — we will update this page. It
+          was last reviewed in {lastUpdated}.
+        </p>
+      </Prose>
+    </Reveal>
+  </Section>
+</BaseLayout>

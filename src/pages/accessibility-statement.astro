@@ -1,0 +1,142 @@
+---
+/**
+ * Accessibility statement.
+ *
+ * URL deliberately matches the original site: /accessibility-statement.
+ *
+ * The original page is an UNEDITED Wix template — it still contains the
+ * template's own authoring instructions. Rather than carry that across, this
+ * page states what is actually true of this build, all of it measured:
+ * contrast ratios, keyboard access, heading structure, reduced-motion
+ * support. Keep it honest — if a claim stops being true, change the claim.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import Prose from '../components/Prose.astro';
+import Reveal from '../components/Reveal.astro';
+import { company } from '../data/site';
+
+const lastUpdated = 'August 2026';
+---
+
+<BaseLayout
+  title="Accessibility Statement"
+  description="Urjapod Energy is committed to making this website usable by everyone, including people with disabilities. What we have done, known limitations, and how to report a problem."
+  breadcrumbs={[
+    { label: 'Accessibility Statement', href: '/accessibility-statement/' },
+  ]}
+>
+  <PageHeader
+    eyebrow="Accessibility"
+    title="Accessibility statement"
+    lead="We want everyone to be able to use this site — including people browsing with a keyboard, a screen reader, magnification, or with motion sensitivity."
+  />
+
+  <Section width="narrow">
+    <Reveal>
+      <Prose>
+        <h2>Our commitment</h2>
+        <p>
+          Urjapod Energy is working to make this website accessible to people
+          with disabilities. An accessible site lets visitors with disabilities
+          browse with the same ease and enjoyment as everyone else. We treat
+          accessibility as part of building the site, not something bolted on
+          afterwards.
+        </p>
+
+        <h2>What we have done</h2>
+        <p>
+          This site was built to the Web Content Accessibility Guidelines
+          (WCAG) 2.1 Level AA. Specifically:
+        </p>
+        <ul>
+          <li>
+            <strong>Colour contrast.</strong> Every text and background pair on
+            the site was measured, not estimated, and meets or exceeds the
+            4.5:1 ratio required for normal text. Our brand amber is used only
+            as a graphic or behind dark text, never as light text, because it
+            cannot pass contrast on a white background.
+          </li>
+          <li>
+            <strong>Keyboard access.</strong> Every link, button and form field
+            can be reached and operated with a keyboard alone. Focus outlines
+            are never removed, and a “Skip to content” link is the first thing
+            you reach when you press Tab.
+          </li>
+          <li>
+            <strong>Structure.</strong> Each page has a single main heading and
+            a heading order that does not skip levels, so screen reader users
+            can navigate by headings. Landmarks — header, main, footer,
+            navigation — are marked up so they can be jumped between.
+          </li>
+          <li>
+            <strong>Names for controls.</strong> Every link and button has a
+            meaningful accessible name. Links that open in a new tab say so.
+            Icons that carry meaning are labelled; decorative graphics are
+            hidden from assistive technology so they are not read out as noise.
+          </li>
+          <li>
+            <strong>Reduced motion.</strong> If your operating system is set to
+            reduce motion, all animation and smooth scrolling is switched off
+            automatically.
+          </li>
+          <li>
+            <strong>Zoom and small screens.</strong> Text can be enlarged
+            without breaking the layout, pinch-zoom is not disabled, and no
+            page scrolls sideways at common screen widths.
+          </li>
+          <li>
+            <strong>Forms.</strong> Fields have visible labels rather than
+            placeholder-only hints, errors appear in text next to the field
+            they belong to, and focus moves to the first problem when a
+            submission fails.
+          </li>
+          <li>
+            <strong>Works without JavaScript.</strong> All content and contact
+            details remain readable if scripts fail to load. Only the contact
+            form needs JavaScript, and our email address and phone number are
+            shown as plain text beside it.
+          </li>
+        </ul>
+
+        <h2>Known limitations</h2>
+        <p>We would rather name the gaps than claim there are none:</p>
+        <ul>
+          <li>
+            The chemistry comparison table on the Sodium Ion page is wider than
+            a phone screen and scrolls sideways inside its own frame. It is
+            reachable by keyboard and labelled as a scrollable region, but a
+            wide table is still harder to read on a small screen.
+          </li>
+          <li>
+            This site has not yet been audited by an independent accessibility
+            specialist, nor formally tested with every screen reader and
+            browser combination.
+          </li>
+        </ul>
+
+        <h2>Tell us if something does not work</h2>
+        <p>
+          If any part of this site is difficult or impossible to use, we want
+          to hear about it — it is the fastest way for us to fix it. Email
+          {' '}<a href={`mailto:${company.email}`}>{company.email}</a> or call
+          {' '}<a href={`tel:${company.phoneHref}`}>{company.phone}</a>, and
+          tell us the page and what went wrong. We will reply and let you know
+          how we intend to put it right.
+        </p>
+        <p>
+          If you need information from this site in a different format, contact
+          us and we will provide it.
+        </p>
+
+        <h2>This statement</h2>
+        <p>
+          This statement applies to <strong>www.urjapod.com</strong> and was
+          last reviewed in {lastUpdated}. We review it whenever the site
+          changes.
+        </p>
+      </Prose>
+    </Reveal>
+  </Section>
+</BaseLayout>

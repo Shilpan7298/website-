@@ -1,26 +1,40 @@
 ---
+/**
+ * Sticky site header.
+ *
+ * Nav mirrors the live site: Home (the logo) · Sodium Ion · Product · Blog ·
+ * Contact, plus the Bill Analyser as the one primary action.
+ *
+ * The Bill Analyser is an OUTBOUND link (see `billAnalyser` in
+ * src/data/site.ts) so it carries an external-link icon, target="_blank" and
+ * rel="noopener noreferrer". Set `external: false` there and it renders as an
+ * ordinary internal link instead — no markup change needed here.
+ */
 import Container from './Container.astro';
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
-import Button from './Button.astro';
-import { nav } from '../data/site';
+import { nav, billAnalyser, company } from '../data/site';
 
 const path = Astro.url.pathname;
 const isActive = (href: string) =>
   href === '/' ? path === '/' : path.startsWith(href);
+
+const outbound = billAnalyser.external
+  ? { target: '_blank', rel: 'noopener noreferrer' }
+  : {};
 ---
 
 <header
-  class="sticky top-0 z-50 border-b border-ink-200/80 bg-ink-50/85 backdrop-blur-md supports-[backdrop-filter]:bg-ink-50/70"
+  class="sticky top-0 z-50 border-b border-ink-200/70 bg-white/85 backdrop-blur-md supports-[backdrop-filter]:bg-white/70"
 >
   <Container width="wide">
-    <div class="flex h-16 items-center justify-between gap-4 lg:h-18">
+    <div class="flex h-16 items-center justify-between gap-4 lg:h-20">
       <a
         href="/"
-        class="rounded-md transition-opacity hover:opacity-80"
-        aria-label="Urjapod Energy — home"
+        class="shrink-0 rounded-lg transition-opacity hover:opacity-85"
+        aria-label={`${company.name} — home`}
       >
-        <Logo />
+        <Logo class="h-9 w-auto lg:h-10" />
       </a>
 
       <nav aria-label="Primary" class="hidden items-center gap-1 lg:flex">
@@ -30,20 +44,41 @@ const isActive = (href: string) =>
               href={item.href}
               aria-current={isActive(item.href) ? 'page' : undefined}
               class:list={[
-                'rounded-md px-3.5 py-2 text-[0.9375rem] font-medium transition-colors duration-200',
+                'relative rounded-lg px-3.5 py-2 text-[0.9375rem] font-semibold transition-colors duration-200',
                 isActive(item.href)
-                  ? 'text-ink-950'
-                  : 'text-ink-600 hover:text-ink-950',
+                  ? 'text-brand-700'
+                  : 'text-ink-600 hover:text-brand-700',
               ]}
             >
               {item.label}
+              {/* Active page gets a volt underline — the bolt colour used as a
+                  graphic, never as text, so contrast is unaffected. */}
+              {isActive(item.href) && (
+                <span
+                  aria-hidden="true"
+                  class="absolute inset-x-3.5 -bottom-0.5 h-[3px] rounded-full bg-volt-500"
+                />
+              )}
             </a>
           ))
         }
       </nav>
 
       <div class="hidden lg:block">
-        <Button href="/contact/" size="sm" icon="right">Talk to us</Button>
+        <a
+          href={billAnalyser.href}
+          {...outbound}
+          class="group inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 text-[0.9375rem] font-semibold text-white shadow-brand-sm transition-all duration-200 hover:bg-brand-700 hover:shadow-brand-md"
+        >
+          {billAnalyser.label}
+          <Icon
+            name={billAnalyser.external ? 'arrowUpRight' : 'arrowRight'}
+            class="size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5"
+          />
+          {billAnalyser.external && (
+            <span class="sr-only">(opens in a new tab)</span>
+          )}
+        </a>
       </div>
 
       <button
@@ -60,12 +95,9 @@ const isActive = (href: string) =>
     </div>
   </Container>
 
-  <!-- Mobile panel. Rendered in the HTML and toggled with `hidden`, so it
-       needs no framework and appears instantly on first tap. -->
-  <div
-    id="mobile-nav"
-    class="hidden border-t border-ink-200 bg-ink-50 lg:hidden"
-  >
+  {/* Mobile panel. Rendered in the HTML and toggled with `hidden`, so it needs
+      no framework and appears instantly on first tap. */}
+  <div id="mobile-nav" class="hidden border-t border-ink-200 bg-white lg:hidden">
     <Container width="wide">
       <nav aria-label="Mobile" class="flex flex-col gap-1 py-4">
         {
@@ -74,19 +106,27 @@ const isActive = (href: string) =>
               href={item.href}
               aria-current={isActive(item.href) ? 'page' : undefined}
               class:list={[
-                'rounded-lg px-3 py-3 text-base font-medium transition-colors',
+                'rounded-lg px-3 py-3 text-base font-semibold transition-colors',
                 isActive(item.href)
-                  ? 'bg-ink-100 text-ink-950'
-                  : 'text-ink-700 hover:bg-ink-100 hover:text-ink-950',
+                  ? 'bg-brand-50 text-brand-700'
+                  : 'text-ink-700 hover:bg-ink-100 hover:text-brand-700',
               ]}
             >
               {item.label}
             </a>
           ))
         }
-        <Button href="/contact/" class="mt-3 w-full" icon="right">
-          Talk to us
-        </Button>
+        <a
+          href={billAnalyser.href}
+          {...outbound}
+          class="mt-3 inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 font-semibold text-white"
+        >
+          {billAnalyser.label}
+          <Icon
+            name={billAnalyser.external ? 'arrowUpRight' : 'arrowRight'}
+            class="size-4"
+          />
+        </a>
       </nav>
     </Container>
   </div>
