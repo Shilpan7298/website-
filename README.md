@@ -24,7 +24,25 @@ npm run preview  # serve the built output
 npm run check    # astro check — typecheck .astro and .tsx
 ```
 
-Node 20+ required.
+**Node 22.12 or newer is required** — Astro 7 declares
+`engines.node: ">=22.12.0"`. On an older Node the install or build fails with
+errors that do not obviously point at the Node version, so check `node -v`
+first if anything looks strange.
+
+### Viewing the site
+
+`npm run dev` serves at <http://localhost:4321> with hot reload — this is what
+you want while editing.
+
+To check what actually ships, build first and serve the output:
+
+```bash
+npm run build && npm run preview
+```
+
+`dev` and `preview` are not equivalent. `dev` runs unminified with source maps
+and hydrates differently; `preview` serves the real `dist/`, which is what a
+visitor gets. Test performance and the contact form against `preview`.
 
 ## Measured payload
 
