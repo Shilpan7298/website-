@@ -43,6 +43,46 @@ export const nav = [
 ] as const;
 
 /**
+ * Legal pages. These paths deliberately match the ORIGINAL urjapod.com URLs
+ * (/accessibility-statement and /english-privacy-policy, note the unusual
+ * "english-" prefix) so existing inbound links and search results keep
+ * working. Do not "tidy" these slugs.
+ */
+export const legalNav = [
+  { label: 'Privacy Policy', href: '/english-privacy-policy/' },
+  { label: 'Accessibility Statement', href: '/accessibility-statement/' },
+] as const;
+
+/**
+ * The company's own positioning, carried over from the original site.
+ *
+ * These three areas are how Urjapod already describes what it does. The
+ * wording below is a light edit of the original copy for tone and grammar —
+ * the substance, and the order, are theirs.
+ */
+export const pillars = [
+  {
+    icon: 'layers',
+    title: 'Technical solutions',
+    body: 'We provide technical solutions to our partners right from the early pre-bid stage, through project construction, and across the whole project life cycle.',
+  },
+  {
+    icon: 'sun',
+    title: 'Renewable power plants',
+    body: 'Solar, wind and wind–solar hybrid plants work exceptionally well with Urjapod storage. Together we design robust, cost-effective and advanced energy storage systems that reduce losses and improve the realisations from your renewable assets.',
+  },
+  {
+    icon: 'grid',
+    title: 'Grid-scale storage',
+    body: 'As more renewables connect to the grid, grid management gets complicated. We help optimise future capacity expansion with BESS, so utilities reduce their CAPEX and increase resilience through the strategic deployment of energy storage.',
+  },
+] as const;
+
+/** The company's stated ambition, from the original site. */
+export const vision =
+  "Urjapod aims to further the advancement in grid-scale energy storage by leveraging the latest battery chemistries, compact prismatic cell designs, and AI algorithms for battery management systems — with the goal of being India's best and most reliable BESS brand.";
+
+/**
  * Pod Gen 1 — the flagship container BESS.
  *
  * Verified from public sources: 20 ft container form factor, prismatic LFP
@@ -72,6 +112,28 @@ export const podGen1 = {
     { label: 'Thermal management', value: 'Liquid cooled', verified: false },
     { label: 'Fire safety', value: 'Aerosol suppression + gas detection', verified: false },
     { label: 'Warranty', value: '10 years', verified: false },
+  ],
+} as const;
+
+/**
+ * Sodium-ion. On the original site this sits on the Products page as a
+ * product line in its own right, not as a footnote — so it is modelled as one
+ * here too.
+ *
+ * The original spells it "Prizmatic Sodium Ion Cells"; corrected to
+ * "prismatic" throughout.
+ */
+export const sodiumIon = {
+  name: 'Prismatic sodium-ion',
+  status: 'Prototype in development',
+  headline: "India's 1st prototype batteries with prismatic sodium-ion cells.",
+  summary:
+    'Sodium-ion is an upcoming battery chemistry that is ideal for energy storage applications. It is inherently safer, lasts longer, works across a wider operating temperature range and costs less.',
+  benefits: [
+    { title: 'Inherently safer', body: 'Can be transported and stored at zero volts, which lithium chemistries cannot.' },
+    { title: 'Longer life', body: 'Tolerates deep daily cycling with less degradation per cycle.' },
+    { title: 'Wider temperature range', body: 'Holds capacity in conditions where lithium cells fall away.' },
+    { title: 'Lower cost', body: 'Built from abundant materials, with no lithium, cobalt or nickel exposure.' },
   ],
 } as const;
 
