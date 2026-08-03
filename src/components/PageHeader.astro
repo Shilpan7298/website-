@@ -1,7 +1,17 @@
 ---
+/**
+ * Top-of-page banner for every page except the home page, which uses Hero.
+ *
+ * Renders the page's single <h1>. Do not add another <h1> to a page that uses
+ * this — SectionHeader (<h2>) is the right level for everything below.
+ *
+ * Not wrapped in <Reveal>: it is above the fold on load, and animating the
+ * page title in would delay first meaningful paint for no benefit.
+ */
 import Container from './Container.astro';
 
 interface Props {
+  /** Short section label above the title, e.g. "Products". */
   eyebrow: string;
   title: string;
   lead?: string;

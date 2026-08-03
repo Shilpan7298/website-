@@ -10,8 +10,26 @@ import Reveal from '../components/Reveal.astro';
 import Icon from '../components/Icon.astro';
 import Button from '../components/Button.astro';
 import PodVisual from '../components/PodVisual.astro';
-import { podGen1, showProvisionalMarkers } from '../data/site';
+import {
+  podGen1,
+  showProvisionalMarkers,
+  pillars,
+  vision,
+  sodiumIon,
+} from '../data/site';
 
+/**
+ * Home page.
+ *
+ * Section order follows the "Enterprise Gateway" pattern from the design
+ * system: hero → what we do → applications → the product → R&D → process →
+ * CTA. The intent is that a visitor can stop reading at any point and still
+ * have got something useful.
+ *
+ * Page-local content (applications, process) is defined here rather than in
+ * src/data/site.ts because nothing else uses it. Only facts and figures that
+ * appear in more than one place, or that need auditing, live in site.ts.
+ */
 const applications = [
   {
     icon: 'sun',
@@ -65,10 +83,34 @@ const headlineSpecs = podGen1.specs.slice(0, 6);
 >
   <Hero />
 
-  <!-- Capability bento -->
-  <Section tone="muted" width="wide">
+  {/* The company's three stated areas of work, carried over from the original
+      site. This is Urjapod's own framing of the business — it sits directly
+      under the hero because it is the first thing the original site says. */}
+  <Section width="wide">
     <SectionHeader
       eyebrow="What we do"
+      title="Energy storage is critical to the further adoption of renewable energy."
+      lead="We provide high-tech, reliable and cost-effective battery energy storage solutions — across the whole life of a project."
+      class="mb-12"
+    />
+    <ul class="grid gap-5 md:grid-cols-3">
+      {
+        pillars.map((pillar, i) => (
+          <FeatureCard
+            icon={pillar.icon}
+            title={pillar.title}
+            body={pillar.body}
+            index={i}
+          />
+        ))
+      }
+    </ul>
+  </Section>
+
+  {/* Capability bento */}
+  <Section tone="muted" width="wide">
+    <SectionHeader
+      eyebrow="How we work"
       title="Storage is what makes renewable power dispatchable."
       lead="A solar plant produces when the sun is up, not when demand peaks. Storage closes that gap — and closing it well takes a partner who owns the whole scope, not just the box."
       class="mb-12"
@@ -76,7 +118,7 @@ const headlineSpecs = podGen1.specs.slice(0, 6);
     <CapabilityBento />
   </Section>
 
-  <!-- Applications -->
+  {/* Applications */}
   <Section id="applications" width="wide">
     <SectionHeader
       eyebrow="Applications"
@@ -99,7 +141,7 @@ const headlineSpecs = podGen1.specs.slice(0, 6);
     </ul>
   </Section>
 
-  <!-- Pod Gen 1 -->
+  {/* Pod Gen 1 */}
   <Section tone="muted" width="wide">
     <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
       <Reveal>
@@ -154,7 +196,7 @@ const headlineSpecs = podGen1.specs.slice(0, 6);
     </div>
   </Section>
 
-  <!-- Sodium-ion R&D -->
+  {/* Sodium-ion R&D */}
   <Section tone="dark" width="wide">
     <div class="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
       <Reveal>
@@ -171,30 +213,40 @@ const headlineSpecs = podGen1.specs.slice(0, 6);
 
       <Reveal index={1}>
         <p class="text-lg leading-relaxed text-ink-400">
-          Sodium-ion is the chemistry energy storage has been waiting for. It
-          uses no lithium, no cobalt and no nickel — which takes the raw
-          material volatility out of the cost curve — and it is inherently
-          safer, lasts longer and works across a wider temperature range than
-          the lithium chemistries in use today.
+          {sodiumIon.summary}
         </p>
         <p class="mt-5 text-lg leading-relaxed text-ink-400">
-          We are building the first prismatic sodium-ion prototype cells in
-          India, so the next generation of Pod is not dependent on an imported
-          supply chain.
+          It uses no lithium, no cobalt and no nickel, which takes the raw
+          material volatility out of the cost curve — so the next generation of
+          Pod need not depend on an imported supply chain.
         </p>
         <div class="mt-8">
-          <Button href="/technology/" size="lg" variant="onDark" icon="right">
-            Read about the technology
+          <Button href="/products/" size="lg" variant="onDark" icon="right">
+            See the product range
           </Button>
         </div>
       </Reveal>
     </div>
   </Section>
 
-  <!-- Process -->
+  {/* The company's stated ambition, from the original site. Given a section
+      of its own rather than buried, because it is the strongest thing the
+      original copy says about where the business is going. */}
+  <Section tone="muted" width="default" size="sm">
+    <Reveal class="mx-auto max-w-3xl text-center">
+      <p class="text-xs font-bold tracking-[0.14em] text-accent-600 uppercase">
+        Our ambition
+      </p>
+      <p class="mt-5 text-2xl leading-snug font-semibold text-ink-950 sm:text-[1.75rem]">
+        {vision}
+      </p>
+    </Reveal>
+  </Section>
+
+  {/* Process */}
   <Section width="wide">
     <SectionHeader
-      eyebrow="How we work"
+      eyebrow="Delivery"
       title="From concept to commissioning, and everything after."
       class="mb-12"
     />

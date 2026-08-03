@@ -3,6 +3,9 @@
   "type": "module",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -13,7 +16,6 @@
   "dependencies": {
     "@astrojs/react": "^6.0.2",
     "@astrojs/sitemap": "^3.7.3",
-    "@fontsource-variable/plus-jakarta-sans": "^5.2.5",
     "@tailwindcss/vite": "^4.1.14",
     "astro": "^7.1.6",
     "react": "^19.2.0",
@@ -22,8 +24,12 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@fontsource-variable/plus-jakarta-sans": "^5.2.5",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "typescript": "^5.9.3"
+  },
+  "comments": {
+    "@fontsource-variable/plus-jakarta-sans": "Not imported by any source file. It is the provenance of public/fonts/plus-jakarta-sans-latin.woff2, which was copied out of it once. Kept as a devDependency so the font can be re-subsetted or updated reproducibly: cp node_modules/@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2 public/fonts/plus-jakarta-sans-latin.woff2. Safe to remove entirely if you never intend to update the font."
   }
 }

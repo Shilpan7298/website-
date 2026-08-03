@@ -8,8 +8,16 @@ import CTASection from '../components/CTASection.astro';
 import PodVisual from '../components/PodVisual.astro';
 import Reveal from '../components/Reveal.astro';
 import Icon from '../components/Icon.astro';
-import { podGen1, showProvisionalMarkers } from '../data/site';
+import { podGen1, showProvisionalMarkers, sodiumIon } from '../data/site';
 
+/**
+ * Pod Gen 1 product page.
+ *
+ * The spec table renders straight from `podGen1.specs` in src/data/site.ts,
+ * including the "Provisional" badges. Do not hardcode a spec into this page —
+ * the badge logic and the count in the footnote both derive from that array,
+ * so a hardcoded value would silently escape the provisional accounting.
+ */
 const subsystems = [
   {
     icon: 'battery',
@@ -50,14 +58,65 @@ const provisional = podGen1.specs.filter((s) => !s.verified).length;
   title="Pod Gen 1 — Containerised Battery Energy Storage"
   description="Pod Gen 1 is Urjapod's 20-foot containerised battery energy storage system, built on prismatic LFP cells with an AI-enabled battery management system for grid-scale deployment."
 >
+  {/* Framing and lead are the original site's own product-page copy. */}
   <PageHeader
     eyebrow="Products"
-    title="Pod Gen 1"
-    lead={podGen1.summary}
+    title="A range built for the demands of a modern grid."
+    lead="Urjapod provides a range of high-quality grid-scale battery energy storage systems and power plant solutions, designed to meet the demanding requirements of modern energy grids and to run efficiently and reliably."
   />
 
-  <!-- Visual + headline specs -->
-  <Section width="wide">
+  {/* Product index — the range at a glance, so neither product is buried. */}
+  <div class="border-b border-ink-200 bg-ink-100">
+    <div class="mx-auto grid w-full max-w-7xl gap-4 px-5 py-6 sm:px-6 md:grid-cols-2 lg:px-8">
+      {
+        [
+          {
+            href: '#pod-gen-1',
+            name: podGen1.name,
+            status: 'In production',
+            blurb: 'Container-scale BESS on prismatic LFP cells.',
+            live: true,
+          },
+          {
+            href: '#sodium-ion',
+            name: sodiumIon.name,
+            status: sodiumIon.status,
+            blurb: "India's 1st prototype cells of this chemistry.",
+            live: false,
+          },
+        ].map((p) => (
+          <a
+            href={p.href}
+            class="group flex cursor-pointer items-center justify-between gap-4 rounded-panel border border-ink-200 bg-white px-5 py-4 transition-all duration-200 hover:border-ink-300 hover:shadow-soft-md"
+          >
+            <span>
+              <span class="flex items-center gap-2.5">
+                <span class="font-bold text-ink-950">{p.name}</span>
+                <span
+                  class:list={[
+                    'rounded-full px-2.5 py-0.5 text-[0.6875rem] font-semibold',
+                    p.live
+                      ? 'bg-energy-50 text-energy-700'
+                      : 'bg-accent-50 text-accent-700',
+                  ]}
+                >
+                  {p.status}
+                </span>
+              </span>
+              <span class="mt-1 block text-sm text-ink-600">{p.blurb}</span>
+            </span>
+            <Icon
+              name="arrowRight"
+              class="size-5 shrink-0 text-accent-600 transition-transform duration-200 group-hover:translate-x-0.5"
+            />
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  {/* Visual + headline specs */}
+  <Section id="pod-gen-1" width="wide">
     <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
       <Reveal class="rounded-hero border border-ink-200 bg-white p-8 shadow-soft-lg">
         <PodVisual />
@@ -67,7 +126,15 @@ const provisional = podGen1.specs.filter((s) => !s.verified).length;
       </Reveal>
 
       <Reveal index={1}>
-        <h2 class="text-2xl sm:text-3xl">One container, one scope of supply.</h2>
+        <p class="text-xs font-bold tracking-[0.14em] text-accent-600 uppercase">
+          Pod Gen 1
+        </p>
+        <h2 class="mt-3 text-2xl sm:text-3xl">
+          One container, one scope of supply.
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-ink-600">
+          {podGen1.summary}
+        </p>
         <p class="mt-4 text-lg leading-relaxed text-ink-600">
           Everything needed to store and return energy arrives as a single
           unit: cells, racks, management, cooling, fire safety and controls,
@@ -98,7 +165,7 @@ const provisional = podGen1.specs.filter((s) => !s.verified).length;
     </div>
   </Section>
 
-  <!-- Full specification -->
+  {/* Full specification */}
   <Section tone="muted" width="wide">
     <SectionHeader
       eyebrow="Specification"
@@ -149,7 +216,7 @@ const provisional = podGen1.specs.filter((s) => !s.verified).length;
     }
   </Section>
 
-  <!-- Subsystems -->
+  {/* Subsystems */}
   <Section width="wide">
     <SectionHeader
       eyebrow="Inside the pod"
@@ -168,6 +235,47 @@ const provisional = podGen1.specs.filter((s) => !s.verified).length;
         ))
       }
     </ul>
+  </Section>
+
+  {/* Second product line. On the original site sodium-ion sits on the
+      Products page as a product in its own right, so it gets equal billing
+      here rather than being reduced to a research footnote. */}
+  <Section id="sodium-ion" tone="dark" width="wide">
+    <div class="grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
+      <Reveal>
+        <span
+          class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white"
+        >
+          <Icon name="flask" class="size-4 text-accent-300" />
+          {sodiumIon.status}
+        </span>
+        <h2 class="mt-6 text-3xl leading-tight text-white sm:text-4xl">
+          {sodiumIon.headline}
+        </h2>
+        <p class="mt-5 text-lg leading-relaxed text-ink-400">
+          {sodiumIon.summary}
+        </p>
+      </Reveal>
+
+      <Reveal index={1}>
+        <ul class="grid gap-4 sm:grid-cols-2">
+          {
+            sodiumIon.benefits.map((b) => (
+              <li class="rounded-panel border border-ink-800 bg-ink-900 p-5">
+                <h3 class="text-base text-white">{b.title}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-ink-400">
+                  {b.body}
+                </p>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-7 text-[0.9375rem] leading-relaxed text-ink-400">
+          Sodium-ion cells are not yet in a shipping Pod — Pod Gen 1 uses LFP
+          today. This is prototype-stage work aimed at the next generation.
+        </p>
+      </Reveal>
+    </div>
   </Section>
 
   <CTASection

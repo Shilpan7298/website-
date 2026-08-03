@@ -1,9 +1,20 @@
 ---
+/**
+ * Site footer. Every value comes from src/data/site.ts — never hardcode an
+ * address or phone number here, or it will drift from the contact page.
+ *
+ * The navigation column reuses the same `nav` array as the header, so adding
+ * a page updates both places at once.
+ */
 import Container from './Container.astro';
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
-import { company, nav } from '../data/site';
+import { company, nav, legalNav } from '../data/site';
 
+// Evaluated at BUILD time, not in the browser. The copyright year is baked
+// into the HTML, so a site built in December 2026 and never rebuilt will still
+// say 2026 in January. Rebuild annually, or move this to a client script if
+// that matters more than the zero-JS goal.
 const year = new Date().getFullYear();
 const { address } = company;
 ---
@@ -54,6 +65,8 @@ const { address } = company;
           Get in touch
         </h2>
         <ul class="mt-5 space-y-4 text-[0.9375rem]">
+          {/* <address> is the correct element for contact details of the page
+               owner. `not-italic` undoes the browser default. */}
           <li class="flex gap-3">
             <Icon name="mapPin" class="mt-0.5 size-4 shrink-0 text-ink-400" />
             <address class="not-italic text-ink-400">
@@ -86,10 +99,25 @@ const { address } = company;
     </div>
 
     <div
-      class="flex flex-col gap-3 border-t border-ink-800/80 py-7 text-sm text-ink-400 sm:flex-row sm:items-center sm:justify-between"
+      class="flex flex-col gap-4 border-t border-ink-800/80 py-7 text-sm text-ink-400 lg:flex-row lg:items-center lg:justify-between"
     >
       <p>&copy; {year} {company.legalName}. All rights reserved.</p>
-      <p>CIN: {company.cin}</p>
+
+      {/* Legal pages live at the original site's URLs so old links keep
+          working — see legalNav in src/data/site.ts. */}
+      <nav aria-label="Legal" class="flex flex-wrap items-center gap-x-5 gap-y-2">
+        {
+          legalNav.map((item) => (
+            <a
+              href={item.href}
+              class="transition-colors hover:text-white"
+            >
+              {item.label}
+            </a>
+          ))
+        }
+        <span>CIN: {company.cin}</span>
+      </nav>
     </div>
   </Container>
 </footer>

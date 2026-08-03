@@ -42,7 +42,7 @@ const doors = [58, 158, 258, 358];
       </linearGradient>
     </defs>
 
-    <!-- HVAC / thermal management units on the roof -->
+    {/* HVAC / thermal management units on the roof */}
     {
       [92, 200, 308].map((x) => (
         <g>
@@ -68,7 +68,7 @@ const doors = [58, 158, 258, 358];
       ))
     }
 
-    <!-- Container body -->
+    {/* Container body */}
     <rect
       x="30"
       y="50"
@@ -79,16 +79,16 @@ const doors = [58, 158, 258, 358];
       stroke="#334155"
       stroke-width="2"></rect>
 
-    <!-- Corrugation -->
+    {/* Corrugation */}
     <g stroke="#1e293b" stroke-width="1.5" opacity="0.9">
       {ribs.map((x) => <line x1={x} y1="58" x2={x} y2="232" />)}
     </g>
 
-    <!-- Top rail -->
+    {/* Top rail */}
     <rect x="30" y="50" width="400" height="12" rx="3" fill="#334155" opacity="0.6"
     ></rect>
 
-    <!-- Access doors with cell-rack detail -->
+    {/* Access doors with cell-rack detail */}
     {
       doors.map((x) => (
         <g>
@@ -120,16 +120,16 @@ const doors = [58, 158, 258, 358];
       ))
     }
 
-    <!-- Base plinth -->
+    {/* Base plinth */}
     <rect x="22" y="240" width="416" height="16" rx="4" fill="#1e293b"></rect>
     <rect x="52" y="256" width="46" height="12" rx="3" fill="#0f172a"></rect>
     <rect x="362" y="256" width="46" height="12" rx="3" fill="#0f172a"></rect>
 
-    <!-- Energised base line -->
+    {/* Energised base line */}
     <rect x="60" y="236" width="340" height="2.5" rx="1.25" fill="url(#pod-glow)"
     ></rect>
 
-    <!-- Corner castings -->
+    {/* Corner castings */}
     {
       [
         [30, 50],

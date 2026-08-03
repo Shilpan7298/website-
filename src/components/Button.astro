@@ -1,4 +1,14 @@
 ---
+/**
+ * The only button/link-button in the system. Everything clickable that looks
+ * like a button goes through here, so hover, focus and disabled behaviour stay
+ * identical everywhere.
+ *
+ * Polymorphic: renders an <a> when `href` is passed, a <button> otherwise.
+ * That matters for accessibility — a thing that navigates must be a link (it
+ * belongs in the tab order as a link, supports open-in-new-tab, and is
+ * announced as a link), and a thing that acts must be a button.
+ */
 import Icon from './Icon.astro';
 
 interface Props {
@@ -9,6 +19,7 @@ interface Props {
   /** Trailing arrow. `right` for navigation, `upRight` for outbound. */
   icon?: 'right' | 'upRight' | 'none';
   class?: string;
+  /** Anything else (id, data-*, aria-*, download…) is forwarded to the tag. */
   [key: string]: unknown;
 }
 
@@ -22,9 +33,14 @@ const {
   ...rest
 } = Astro.props;
 
+// `group` lets the trailing arrow animate on hover of the whole button.
+// `cursor-pointer` is explicit because Tailwind's reset gives <button> the
+// default cursor, which makes buttons feel inert.
 const base =
   'group inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg font-semibold transition-all duration-200 ease-[var(--ease-out-soft)] disabled:cursor-not-allowed disabled:opacity-50';
 
+// `onDark` is a translucent white treatment for navy sections — a solid
+// secondary button would punch a bright hole in a dark band.
 const variants = {
   primary:
     'bg-accent-600 text-white shadow-soft-sm hover:bg-accent-700 hover:shadow-soft-md active:bg-accent-800',
@@ -35,7 +51,9 @@ const variants = {
     'border border-white/25 bg-white/10 text-white backdrop-blur-sm hover:border-white/40 hover:bg-white/20',
 } as const;
 
-// md is 44px tall — the minimum comfortable touch target.
+// md is h-11 = 44px, the minimum comfortable touch target. `sm` (40px) is used
+// only in the desktop header, where input is a mouse and the 44px floor for
+// touch does not apply.
 const sizes = {
   sm: 'h-10 px-4 text-sm',
   md: 'h-11 px-5 text-[0.9375rem]',
