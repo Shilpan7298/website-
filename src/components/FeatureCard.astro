@@ -25,16 +25,16 @@ const Tag = href ? 'a' : 'div';
       'flex h-full flex-col rounded-panel border p-7 transition-all duration-200',
       isDark
         ? 'border-ink-800 bg-ink-900'
-        : 'border-ink-200 bg-white shadow-soft-sm',
+        : 'border-ink-200 bg-white shadow-brand-sm',
       href && 'group cursor-pointer',
-      href && !isDark && 'hover:border-ink-300 hover:shadow-soft-lg',
+      href && !isDark && 'hover:border-ink-300 hover:shadow-brand-lg',
       href && isDark && 'hover:border-ink-700 hover:bg-ink-800',
     ]}
   >
     <span
       class:list={[
         'flex size-11 items-center justify-center rounded-lg',
-        isDark ? 'bg-white/10 text-accent-300' : 'bg-accent-50 text-accent-600',
+        isDark ? 'bg-white/10 text-brand-300' : 'bg-brand-50 text-brand-600',
       ]}
     >
       <Icon name={icon} class="size-5" />
@@ -63,7 +63,7 @@ const Tag = href ? 'a' : 'div';
         <span
           class:list={[
             'mt-5 inline-flex items-center gap-1.5 text-sm font-semibold',
-            isDark ? 'text-accent-300' : 'text-accent-600',
+            isDark ? 'text-brand-300' : 'text-brand-600',
           ]}
         >
           Learn more

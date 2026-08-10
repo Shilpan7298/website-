@@ -1,62 +1,98 @@
 ---
+/**
+ * Site footer. Every value comes from src/data/site.ts — never hardcode an
+ * address or phone number here, or it will drift from the contact page.
+ *
+ * Doubles as an SEO surface: it repeats the full NAP (name, address, phone)
+ * on every page, which is what local search relies on, and links every page
+ * so nothing is more than one hop from anywhere.
+ */
 import Container from './Container.astro';
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
-import { company, nav } from '../data/site';
+import { company, nav, legalNav, billAnalyser } from '../data/site';
 
+// Evaluated at BUILD time, not in the browser. Rebuild annually, or the
+// copyright year will lag.
 const year = new Date().getFullYear();
 const { address } = company;
+
+const outbound = billAnalyser.external
+  ? { target: '_blank', rel: 'noopener noreferrer' }
+  : {};
 ---
 
-<footer class="border-t border-ink-800 bg-ink-950 text-ink-400">
+<footer class="bg-brand-950 text-ink-300">
+  {/* Volt hairline — the bolt colour as a graphic rule across the top edge. */}
+  <div aria-hidden="true" class="h-1 w-full bg-volt-500"></div>
+
   <Container width="wide">
-    <div class="grid gap-12 py-16 lg:grid-cols-[1.4fr_1fr_1fr] lg:gap-16">
+    <div class="grid gap-12 py-16 lg:grid-cols-[1.5fr_1fr_1.2fr] lg:gap-16">
       <div>
-        <Logo tone="onDark" />
-        <p class="mt-5 max-w-sm text-[0.9375rem] leading-relaxed text-ink-400">
-          Battery energy storage for renewable power plants and the grid —
-          from concept and design through commissioning, operations and
-          maintenance.
+        <Logo tone="onDark" class="h-11 w-auto" />
+        <p class="mt-6 max-w-sm leading-relaxed text-ink-300">
+          Battery energy storage solutions for renewable power plants and
+          grid-scale energy storage — your partner from concept to
+          commissioning.
         </p>
         <a
           href={company.linkedin}
           rel="noopener noreferrer"
           target="_blank"
-          class="mt-6 inline-flex size-11 cursor-pointer items-center justify-center rounded-lg border border-ink-800 text-ink-400 transition-colors hover:border-ink-700 hover:text-white"
-          aria-label="Urjapod Energy on LinkedIn"
+          class="mt-7 inline-flex size-11 cursor-pointer items-center justify-center rounded-lg border border-white/20 text-ink-300 transition-colors hover:border-volt-500 hover:text-white"
+          aria-label={`${company.name} on LinkedIn (opens in a new tab)`}
         >
           <Icon name="linkedin" class="size-5" />
         </a>
       </div>
 
       <nav aria-label="Footer">
-        <h2 class="text-xs font-bold tracking-[0.14em] text-white uppercase">
-          Company
+        <h2 class="text-xs font-bold tracking-[0.16em] text-white uppercase">
+          Explore
         </h2>
         <ul class="mt-5 space-y-3">
+          <li>
+            <a href="/" class="text-ink-300 transition-colors hover:text-white">
+              Home
+            </a>
+          </li>
           {
             nav.map((item) => (
               <li>
                 <a
                   href={item.href}
-                  class="text-[0.9375rem] text-ink-400 transition-colors hover:text-white"
+                  class="text-ink-300 transition-colors hover:text-white"
                 >
                   {item.label}
                 </a>
               </li>
             ))
           }
+          <li>
+            <a
+              href={billAnalyser.href}
+              {...outbound}
+              class="inline-flex items-center gap-1.5 text-ink-300 transition-colors hover:text-white"
+            >
+              {billAnalyser.label}
+              {billAnalyser.external && (
+                <Icon name="arrowUpRight" class="size-3.5" />
+              )}
+            </a>
+          </li>
         </ul>
       </nav>
 
       <div>
-        <h2 class="text-xs font-bold tracking-[0.14em] text-white uppercase">
+        <h2 class="text-xs font-bold tracking-[0.16em] text-white uppercase">
           Get in touch
         </h2>
-        <ul class="mt-5 space-y-4 text-[0.9375rem]">
+        <ul class="mt-5 space-y-4">
           <li class="flex gap-3">
-            <Icon name="mapPin" class="mt-0.5 size-4 shrink-0 text-ink-400" />
-            <address class="not-italic text-ink-400">
+            <Icon name="mapPin" class="mt-0.5 size-4 shrink-0 text-volt-500" />
+            {/* <address> is the correct element for the page owner's contact
+                details; `not-italic` undoes the browser default. */}
+            <address class="text-ink-300 not-italic">
               {address.line1}<br />
               {address.line2}<br />
               {address.city}, {address.state} {address.postcode}<br />
@@ -64,19 +100,19 @@ const { address } = company;
             </address>
           </li>
           <li class="flex gap-3">
-            <Icon name="mail" class="mt-0.5 size-4 shrink-0 text-ink-400" />
+            <Icon name="mail" class="mt-0.5 size-4 shrink-0 text-volt-500" />
             <a
               href={`mailto:${company.email}`}
-              class="text-ink-400 transition-colors hover:text-white"
+              class="text-ink-300 transition-colors hover:text-white"
             >
               {company.email}
             </a>
           </li>
           <li class="flex gap-3">
-            <Icon name="phone" class="mt-0.5 size-4 shrink-0 text-ink-400" />
+            <Icon name="phone" class="mt-0.5 size-4 shrink-0 text-volt-500" />
             <a
               href={`tel:${company.phoneHref}`}
-              class="text-ink-400 transition-colors hover:text-white"
+              class="text-ink-300 transition-colors hover:text-white"
             >
               {company.phone}
             </a>
@@ -86,10 +122,22 @@ const { address } = company;
     </div>
 
     <div
-      class="flex flex-col gap-3 border-t border-ink-800/80 py-7 text-sm text-ink-400 sm:flex-row sm:items-center sm:justify-between"
+      class="flex flex-col gap-4 border-t border-white/10 py-7 text-sm text-ink-300 lg:flex-row lg:items-center lg:justify-between"
     >
       <p>&copy; {year} {company.legalName}. All rights reserved.</p>
-      <p>CIN: {company.cin}</p>
+
+      {/* Legal pages sit at the ORIGINAL site's URLs so old links keep
+          working — see legalNav in src/data/site.ts. */}
+      <nav aria-label="Legal" class="flex flex-wrap items-center gap-x-6 gap-y-2">
+        {
+          legalNav.map((item) => (
+            <a href={item.href} class="transition-colors hover:text-white">
+              {item.label}
+            </a>
+          ))
+        }
+        <span>CIN: {company.cin}</span>
+      </nav>
     </div>
   </Container>
 </footer>

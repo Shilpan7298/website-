@@ -1,4 +1,14 @@
 ---
+/**
+ * Product page — Pod Gen 1.
+ *
+ * The spec table renders straight from `podGen1.specs` in src/data/site.ts,
+ * including the "Provisional" badges. Never hardcode a spec into this page:
+ * the badges and the footnote count both derive from that array, so a
+ * hardcoded value would escape the provisional accounting silently.
+ *
+ * Carries Product JSON-LD so the item can qualify for a product rich result.
+ */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import Section from '../components/Section.astro';
@@ -8,7 +18,12 @@ import CTASection from '../components/CTASection.astro';
 import PodVisual from '../components/PodVisual.astro';
 import Reveal from '../components/Reveal.astro';
 import Icon from '../components/Icon.astro';
-import { podGen1, showProvisionalMarkers } from '../data/site';
+import {
+  podGen1,
+  showProvisionalMarkers,
+  company,
+  siteUrl,
+} from '../data/site';
 
 const subsystems = [
   {
@@ -19,17 +34,17 @@ const subsystems = [
   {
     icon: 'cpu',
     title: 'Battery management system',
-    body: 'AI-enabled BMS monitoring voltage, current and temperature per cell, with predictive balancing and early fault detection.',
+    body: 'An AI-enabled BMS monitoring voltage, current and temperature per cell, with predictive balancing and early fault detection.',
   },
   {
     icon: 'thermometer',
     title: 'Thermal management',
-    body: 'Active cooling holds the pack inside its optimal temperature band, which is what protects cycle life in Indian summer conditions.',
+    body: 'Active cooling holds the pack inside its optimal temperature band — which is what protects cycle life in Indian summer conditions.',
   },
   {
     icon: 'shield',
     title: 'Fire detection and suppression',
-    body: 'Multi-layer protection: gas and smoke detection, aerosol suppression, and physical separation between modules.',
+    body: 'Multi-layer protection: gas and smoke detection, suppression, and physical separation between modules.',
   },
   {
     icon: 'zap',
@@ -44,22 +59,46 @@ const subsystems = [
 ] as const;
 
 const provisional = podGen1.specs.filter((s) => !s.verified).length;
+
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: podGen1.name,
+  description: podGen1.summary,
+  category: 'Battery Energy Storage System',
+  url: `${siteUrl}/product/`,
+  brand: { '@type': 'Brand', name: company.name },
+  manufacturer: { '@id': `${siteUrl}/#organization` },
+  // Only the confirmed specs are published as structured data. Provisional
+  // figures stay out of it — machine-readable claims should be true.
+  additionalProperty: podGen1.specs
+    .filter((s) => s.verified)
+    .map((s) => ({
+      '@type': 'PropertyValue',
+      name: s.label,
+      value: s.value,
+    })),
+};
 ---
 
 <BaseLayout
-  title="Pod Gen 1 — Containerised Battery Energy Storage"
-  description="Pod Gen 1 is Urjapod's 20-foot containerised battery energy storage system, built on prismatic LFP cells with an AI-enabled battery management system for grid-scale deployment."
+  title="Pod Gen 1 — 20 ft Containerised BESS"
+  description="Pod Gen 1 is Urjapod's modular container-sized battery for grid-scale energy storage: prismatic LFP cells, an AI-enabled battery management system, in a standard 20 ft container."
+  breadcrumbs={[{ label: 'Product', href: '/product/' }]}
+  schema={productSchema}
 >
   <PageHeader
-    eyebrow="Products"
+    eyebrow="Product"
     title="Pod Gen 1"
     lead={podGen1.summary}
   />
 
-  <!-- Visual + headline specs -->
+  {/* Visual + what it is */}
   <Section width="wide">
     <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
-      <Reveal class="rounded-hero border border-ink-200 bg-white p-8 shadow-soft-lg">
+      <Reveal
+        class="rounded-hero border border-ink-200 bg-white p-8 shadow-brand-lg"
+      >
         <PodVisual />
         <p class="mt-6 text-center text-sm text-ink-600">
           Pod Gen 1 — 20 ft ISO container, front elevation
@@ -70,24 +109,19 @@ const provisional = podGen1.specs.filter((s) => !s.verified).length;
         <h2 class="text-2xl sm:text-3xl">One container, one scope of supply.</h2>
         <p class="mt-4 text-lg leading-relaxed text-ink-600">
           Everything needed to store and return energy arrives as a single
-          unit: cells, racks, management, cooling, fire safety and controls,
+          unit: cells, racks, management, cooling, fire safety and controls —
           integrated and tested before it leaves the factory. It lands on a
           prepared foundation in a standard 20-foot footprint, so site works
-          stay predictable and the shipping is ordinary container logistics.
+          stay predictable and shipping is ordinary container logistics.
         </p>
 
         <ul class="mt-8 space-y-3.5">
           {
-            [
-              'High energy density in a standard ISO footprint',
-              'Robust inbuilt safety protections',
-              'High dust and water resistance',
-              'Complies with global environmental standards',
-            ].map((point) => (
-              <li class="flex gap-3 text-[0.9375rem] text-ink-700">
+            podGen1.features.map((point) => (
+              <li class="flex gap-3 font-medium text-ink-700">
                 <Icon
                   name="check"
-                  class="mt-0.5 size-5 shrink-0 text-energy-600"
+                  class="mt-0.5 size-5 shrink-0 text-brand-600"
                 />
                 {point}
               </li>
@@ -98,7 +132,7 @@ const provisional = podGen1.specs.filter((s) => !s.verified).length;
     </div>
   </Section>
 
-  <!-- Full specification -->
+  {/* Full specification */}
   <Section tone="muted" width="wide">
     <SectionHeader
       eyebrow="Specification"
@@ -108,17 +142,17 @@ const provisional = podGen1.specs.filter((s) => !s.verified).length;
     />
 
     <Reveal
-      class="overflow-hidden rounded-panel border border-ink-200 bg-white shadow-soft-sm"
+      class="overflow-hidden rounded-panel border border-ink-200 bg-white shadow-brand-sm"
     >
       <dl class="divide-y divide-ink-200">
         {
           podGen1.specs.map((spec) => (
             <div class="grid gap-1 px-6 py-4 sm:grid-cols-[minmax(0,16rem)_1fr] sm:items-baseline sm:gap-6">
-              <dt class="text-sm font-semibold text-ink-600">{spec.label}</dt>
-              <dd class="font-semibold text-ink-950">
+              <dt class="text-sm font-bold text-ink-600">{spec.label}</dt>
+              <dd class="font-bold text-brand-950">
                 {spec.value}
                 {showProvisionalMarkers && !spec.verified && (
-                  <span class="ml-2 rounded bg-ink-100 px-1.5 py-0.5 align-middle text-[0.6875rem] font-semibold tracking-wide text-ink-600 uppercase">
+                  <span class="ml-2 rounded bg-volt-100 px-1.5 py-0.5 align-middle text-[0.6875rem] font-bold tracking-wide text-volt-700 uppercase">
                     Provisional
                   </span>
                 )}
@@ -135,9 +169,9 @@ const provisional = podGen1.specs.filter((s) => !s.verified).length;
           class="mt-5 flex gap-3 rounded-panel border border-ink-200 bg-white p-5"
           index={1}
         >
-          <Icon name="clock" class="mt-0.5 size-5 shrink-0 text-ink-400" />
+          <Icon name="clock" class="mt-0.5 size-5 shrink-0 text-volt-600" />
           <p class="text-sm leading-relaxed text-ink-600">
-            <strong class="font-semibold text-ink-800">
+            <strong class="font-bold text-ink-800">
               {provisional} figures are provisional.
             </strong>{' '}
             They are pending final test and certification data and should not
@@ -149,7 +183,7 @@ const provisional = podGen1.specs.filter((s) => !s.verified).length;
     }
   </Section>
 
-  <!-- Subsystems -->
+  {/* Subsystems */}
   <Section width="wide">
     <SectionHeader
       eyebrow="Inside the pod"
@@ -173,7 +207,7 @@ const provisional = podGen1.specs.filter((s) => !s.verified).length;
   <CTASection
     title="Need a configuration for a specific project?"
     lead="Tell us the plant capacity, the duty cycle and the grid connection terms. We will size a system against them and send back an indicative configuration."
-    secondaryLabel="How the technology works"
-    secondaryHref="/technology/"
+    secondaryLabel="Read about sodium-ion"
+    secondaryHref="/sodium-ion/"
   />
 </BaseLayout>

@@ -1,33 +1,77 @@
 ---
+/**
+ * The single HTML shell for every page.
+ *
+ * Owns everything no individual page should duplicate:
+ *   1. SEO metadata — title, description, canonical, Open Graph, Twitter
+ *   2. Structured data — Organization + WebSite site-wide, plus whatever
+ *      schema the page passes in (Product, Article, FAQPage…)
+ *   3. BreadcrumbList JSON-LD
+ *   4. The font preload, which must fire before CSS discovers the @font-face
+ *   5. The one IntersectionObserver that drives every .reveal on the page
+ *
+ * SEO NOTES
+ * - `title` should be under ~60 characters or Google truncates it in results.
+ * - `description` should be 120–160 characters. It does not affect ranking,
+ *   but it is the copy searchers actually read, so it drives click-through.
+ * - Every page MUST pass its own title and description. Never let two pages
+ *   share them — duplicate metadata makes your own pages compete.
+ */
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { company, siteUrl } from '../data/site';
 
+interface Crumb {
+  label: string;
+  href: string;
+}
+
 interface Props {
   title: string;
   description: string;
-  /** Omit the "| Urjapod Energy" suffix (used by the home page). */
+  /** Skip the "| Urjapod Energy" suffix (the home page sets its own). */
   bareTitle?: boolean;
+  /** Trail from Home to this page. Home is prepended automatically. */
+  breadcrumbs?: Crumb[];
+  /** Extra JSON-LD for this page — Product, Article, FAQPage, etc. */
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+  /** Override the social share image (defaults to the site card). */
+  ogImage?: string;
+  /** Set for blog posts so social cards render as articles. */
+  ogType?: 'website' | 'article';
+  /** Tell search engines not to index this page. */
+  noindex?: boolean;
 }
 
-const { title, description, bareTitle = false } = Astro.props;
+const {
+  title,
+  description,
+  bareTitle = false,
+  breadcrumbs = [],
+  schema,
+  ogImage = '/og.png',
+  ogType = 'website',
+  noindex = false,
+} = Astro.props;
 
 const fullTitle = bareTitle ? title : `${title} | ${company.name}`;
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
-const ogImage = new URL('/og.png', siteUrl).href;
+const ogImageUrl = new URL(ogImage, siteUrl).href;
 
 const { address } = company;
 
-const jsonLd = {
+/** Site-wide: who this organisation is. Powers the Google knowledge panel. */
+const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
+  '@id': `${siteUrl}/#organization`,
   name: company.legalName,
   alternateName: company.name,
   url: siteUrl,
-  logo: new URL('/favicon.svg', siteUrl).href,
-  description:
-    'Urjapod Energy designs and builds grid-scale battery energy storage systems (BESS) for renewable power plants in India.',
+  logo: new URL('/logo.svg', siteUrl).href,
+  image: ogImageUrl,
+  description: company.tagline,
   email: company.email,
   telephone: company.phone,
   foundingDate: '2025-05-29',
@@ -41,7 +85,48 @@ const jsonLd = {
     postalCode: address.postcode,
     addressCountry: 'IN',
   },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'sales',
+    email: company.email,
+    telephone: company.phone,
+    areaServed: 'IN',
+    availableLanguage: ['en'],
+  },
 };
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${siteUrl}/#website`,
+  url: siteUrl,
+  name: company.name,
+  description: company.tagline,
+  publisher: { '@id': `${siteUrl}/#organization` },
+};
+
+const trail: Crumb[] = [{ label: 'Home', href: '/' }, ...breadcrumbs];
+
+const breadcrumbSchema =
+  breadcrumbs.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: trail.map((c, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: c.label,
+          item: new URL(c.href, siteUrl).href,
+        })),
+      }
+    : null;
+
+const graphs = [
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema,
+  ...(Array.isArray(schema) ? schema : schema ? [schema] : []),
+].filter(Boolean);
 ---
 
 <!doctype html>
@@ -52,9 +137,10 @@ const jsonLd = {
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-    <!-- Preload the one font file before CSS discovers it, so text paints
-         in the real typeface rather than swapping. -->
+    {/* Preload the one font file before CSS discovers it, so text paints in
+        the real typeface rather than swapping. */}
     <link
       rel="preload"
       href="/fonts/plus-jakarta-sans-latin.woff2"
@@ -65,32 +151,43 @@ const jsonLd = {
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="theme-color" content="#0f172a" />
+    <meta name="theme-color" content="#2b4c9b" />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={company.name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_IN" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
-    <script is:inline set:html={JSON.stringify(jsonLd)} type="application/ld+json" />
+    {
+      graphs.map((g) => (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(g)}
+        />
+      ))
+    }
 
-    <!-- Swap the no-js class before first paint so reveal animations are
-         armed only when JS can actually un-hide them. -->
+    {/* Swap the no-js class before first paint, so reveal animations are armed
+        only when JS can actually un-hide them. */}
     <script is:inline>
       document.documentElement.classList.remove('no-js');
     </script>
   </head>
 
-  <body class="flex min-h-screen flex-col">
+  <body class="flex min-h-screen flex-col bg-ink-50">
     <a
       href="#main"
-      class="sr-only rounded-lg bg-accent-600 px-4 py-2 font-semibold text-white focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[100]"
+      class="sr-only rounded-lg bg-brand-600 px-4 py-2 font-semibold text-white focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[100]"
     >
       Skip to content
     </a>

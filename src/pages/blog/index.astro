@@ -1,0 +1,128 @@
+---
+/**
+ * Blog index.
+ *
+ * Lists every non-draft post, newest first. Posts come from
+ * src/content/blog/*.md — see src/content.config.ts for the schema.
+ *
+ * Carries Blog + ItemList structured data so search engines understand this
+ * is a post listing rather than an ordinary page.
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Section from '../../components/Section.astro';
+import Reveal from '../../components/Reveal.astro';
+import Icon from '../../components/Icon.astro';
+import CTASection from '../../components/CTASection.astro';
+import { siteUrl, company } from '../../data/site';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
+const blogSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  '@id': `${siteUrl}/blog/#blog`,
+  name: `${company.name} Blog`,
+  description:
+    'Notes on grid-scale battery energy storage, battery chemistry and the Indian power system.',
+  url: `${siteUrl}/blog/`,
+  publisher: { '@id': `${siteUrl}/#organization` },
+  blogPost: posts.map((p) => ({
+    '@type': 'BlogPosting',
+    headline: p.data.title,
+    description: p.data.description,
+    datePublished: p.data.pubDate.toISOString(),
+    url: `${siteUrl}/blog/${p.id}/`,
+  })),
+};
+---
+
+<BaseLayout
+  title="Blog — Energy Storage Notes"
+  description="Notes from Urjapod Energy on grid-scale battery storage, battery chemistry, and what the shift to renewables means for the Indian power system."
+  breadcrumbs={[{ label: 'Blog', href: '/blog/' }]}
+  schema={blogSchema}
+>
+  <PageHeader
+    eyebrow="Blog"
+    title="Notes on storage, chemistry and the grid."
+    lead="Occasional writing on what we are learning building battery energy storage in India."
+  />
+
+  <Section width="wide">
+    {
+      posts.length === 0 ? (
+        <Reveal class="rounded-panel border border-dashed border-ink-300 bg-white p-12 text-center">
+          <h2 class="text-xl">No posts yet</h2>
+          <p class="mx-auto mt-3 max-w-md text-ink-600">
+            Add a Markdown file to <code class="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-sm">src/content/blog/</code>{' '}
+            and it will appear here automatically.
+          </p>
+        </Reveal>
+      ) : (
+        <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post, i) => (
+            <Reveal as="li" index={i} class="h-full">
+              <article class="group flex h-full flex-col overflow-hidden rounded-panel border border-ink-200 bg-white shadow-brand-sm transition-all duration-200 hover:border-ink-300 hover:shadow-brand-lg">
+                {/* Volt rule at the top of each card — the bolt colour as a
+                    graphic, keeping cards on-brand without an image. */}
+                <div aria-hidden="true" class="h-1.5 w-full bg-volt-500" />
+
+                <div class="flex flex-1 flex-col p-7">
+                  <div class="flex flex-wrap items-center gap-2">
+                    {post.data.tags.slice(0, 2).map((tag) => (
+                      <span class="rounded-full bg-brand-50 px-2.5 py-1 text-[0.6875rem] font-bold tracking-wide text-brand-700 uppercase">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <h2 class="mt-4 text-xl leading-snug">
+                    <a
+                      href={`/blog/${post.id}/`}
+                      class="transition-colors after:absolute after:inset-0 group-hover:text-brand-700"
+                    >
+                      {post.data.title}
+                    </a>
+                  </h2>
+
+                  <p class="mt-3 flex-1 leading-relaxed text-ink-600">
+                    {post.data.description}
+                  </p>
+
+                  <div class="mt-6 flex items-center gap-2 text-sm text-ink-600">
+                    <Icon name="calendar" class="size-4 text-brand-600" />
+                    <time datetime={post.data.pubDate.toISOString()}>
+                      {fmt(post.data.pubDate)}
+                    </time>
+                  </div>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </ul>
+      )
+    }
+  </Section>
+
+  <CTASection />
+</BaseLayout>
+
+<style>
+  /* The card's <a> is stretched over the whole article via ::after, so the
+     whole card is clickable. `relative` has to live on the article for that
+     to anchor correctly. */
+  article {
+    position: relative;
+  }
+</style>
